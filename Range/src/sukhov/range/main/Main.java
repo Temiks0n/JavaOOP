@@ -6,8 +6,8 @@ import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-        Range rangeA = new Range(1, 5);
-        Range rangeB = new Range(2, 14);
+        Range rangeA = new Range(6, 9);
+        Range rangeB = new Range(4, 7);
 
         int digit = 10;
 

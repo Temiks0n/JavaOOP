@@ -76,7 +76,11 @@ public class Range {
             return new Range[]{new Range(from, range.from), new Range(range.to, to)};
         }
 
-        return new Range[]{new Range(from, to)};
+        if (from < range.from) {
+            return new Range[]{new Range(from, range.from)};
+        } else {
+            return new Range[]{new Range(range.to, to)};
+        }
     }
 
     @Override
