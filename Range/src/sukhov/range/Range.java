@@ -68,8 +68,8 @@ public class Range {
         if (from >= range.from && to <= range.to) {
             return null;
         }
-        if (from >= range.to || to <= range.from) {
-            return null;
+        if (from > range.to || to < range.from) {
+            return new Range[]{new Range(from, to)};
         }
 
         if (from < range.from && to > range.to) {
