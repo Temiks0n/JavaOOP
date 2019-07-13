@@ -5,6 +5,10 @@ public class Range {
     private double to;
 
     public Range(double from, double to) {
+        if (from > to) {
+            throw new IllegalArgumentException("Неверный деапазон \"from\" и \"to\"");
+        }
+
         this.from = from;
         this.to = to;
     }
@@ -14,6 +18,10 @@ public class Range {
     }
 
     public void setFrom(double from) {
+        if (from > to) {
+            throw new IllegalArgumentException("Неверный деапазон \"from\" и \"to\"");
+        }
+
         this.from = from;
     }
 
@@ -22,6 +30,10 @@ public class Range {
     }
 
     public void setTo(double to) {
+        if (from > to) {
+            throw new IllegalArgumentException("Неверный деапазон \"from\" и \"to\"");
+        }
+
         this.to = to;
     }
 
@@ -33,44 +45,41 @@ public class Range {
         return (number >= from && number <= to);
     }
 
-    public Range getIntersectionInterval(Range rangeB) {
-        if (from >= rangeB.getTo() || to <= rangeB.getFrom()) {
+    public Range getIntersectionInterval(Range range) {
+        if (from >= range.to || to <= range.from) {
             return null;
         }
 
-        return new Range(Math.max(from, rangeB.getFrom()), Math.min(to, rangeB.getTo()));
+        return new Range(Math.max(from, range.from), Math.min(to, range.to));
     }
 
-    public Range[] getUnionInterval(Range rangeB) {
-        if (to < rangeB.getFrom()) {
-            return new Range[]{new Range(from, to), new Range(rangeB.getFrom(), rangeB.getTo())};
+    public Range[] getUnionInterval(Range range) {
+        if (to < range.from) {
+            return new Range[]{new Range(from, to), new Range(range.from, range.to)};
         }
-        if (from > rangeB.getTo()) {
-            return new Range[]{new Range(rangeB.getFrom(), rangeB.getTo()), new Range(from, to)};
+        if (from > range.to) {
+            return new Range[]{new Range(range.from, range.to), new Range(from, to)};
         }
 
-        return new Range[]{new Range(Math.min(from, rangeB.getFrom()), Math.max(to, rangeB.getTo()))};
+        return new Range[]{new Range(Math.min(from, range.from), Math.max(to, range.to))};
     }
 
     public Range[] getDifferenceInterval(Range range) {
-        if (from >= range.getFrom() && to <= range.getTo()) {
+        if (from >= range.from && to <= range.to) {
             return null;
         }
-        if (from >= range.getTo() || to <= range.getFrom()) {
+        if (from >= range.to || to <= range.from) {
             return null;
         }
 
-        if (from < range.getFrom() && to > range.getTo()) {
-            return new Range[]{new Range(from, range.getFrom()), new Range(range.getTo(), to)};
+        if (from < range.from && to > range.to) {
+            return new Range[]{new Range(from, range.from), new Range(range.to, to)};
         }
 
-        if (from <= range.getFrom()) {
-            return new Range[]{new Range(from, range.getFrom())};
-        } else {
-            return new Range[]{new Range(range.getTo(), to)};
-        }
+        return new Range[]{new Range(from, to)};
     }
 
+    @Override
     public String toString() {
         return "[" + from + "; " + to + "]";
     }

@@ -1,11 +1,11 @@
 package sukhov.shapes;
 
-public class Square implements Shapes {
+public class Square implements Shape {
     private double side;
 
     public Square(double side) {
         if (side < 0) {
-            throw new RuntimeException("Значение должно быть больше нуля");
+            throw new IllegalArgumentException("Значение должно быть больше нуля");
         }
 
         this.side = side;
@@ -13,7 +13,7 @@ public class Square implements Shapes {
 
     public void setSide(double side) {
         if (side < 0) {
-            throw new RuntimeException("Значение должно быть больше нуля");
+            throw new IllegalArgumentException("Значение должно быть больше нуля");
         }
 
         this.side = side;
@@ -39,10 +39,12 @@ public class Square implements Shapes {
         return 4 * side;
     }
 
+    @Override
     public String toString() {
         return "квадрат: сторона = " + side;
     }
 
+    @Override
     public boolean equals(Object o) {
         if (o == this) {
             return true;
@@ -50,11 +52,13 @@ public class Square implements Shapes {
         if (o == null || o.getClass() != this.getClass()) {
             return false;
         }
+
         Square p = (Square) o;
         return side == p.side;
     }
 
+    @Override
     public int hashCode() {
-        return 37 + Double.hashCode(side);
+        return Double.hashCode(side);
     }
 }

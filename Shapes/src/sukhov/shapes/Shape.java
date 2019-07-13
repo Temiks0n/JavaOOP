@@ -1,9 +1,6 @@
 package sukhov.shapes;
 
-public interface Shapes {
-    double PI = Math.PI;
-    double epsilon = 1.0e-10;
-
+public interface Shape {
     double getWidth();
 
     double getHeight();

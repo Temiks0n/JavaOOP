@@ -1,11 +1,11 @@
 package sukhov.shapes;
 
-public class Circle implements Shapes {
+public class Circle implements Shape {
     private double radius;
 
     public Circle(double radius) {
-        if (radius < 0) {
-            throw new RuntimeException("Значение должно быть больше нуля");
+        if (radius <= 0) {
+            throw new IllegalArgumentException("Значение должно быть больше нуля");
         }
 
         this.radius = radius;
@@ -17,7 +17,7 @@ public class Circle implements Shapes {
 
     public void setRadius(double radius) {
         if (radius < 0) {
-            throw new RuntimeException("Значение должно быть больше нуля");
+            throw new IllegalArgumentException("Значение должно быть больше нуля");
         }
 
         this.radius = radius;
@@ -35,18 +35,20 @@ public class Circle implements Shapes {
 
     @Override
     public double getArea() {
-        return PI * Math.pow(radius, 2);
+        return Math.PI * Math.pow(radius, 2);
     }
 
     @Override
     public double getPerimeter() {
-        return 2 * PI * radius;
+        return 2 * Math.PI * radius;
     }
 
+    @Override
     public String toString() {
         return "окружность: радиус = " + radius;
     }
 
+    @Override
     public boolean equals(Object o) {
         if (o == this) {
             return true;
@@ -54,11 +56,13 @@ public class Circle implements Shapes {
         if (o == null || o.getClass() != this.getClass()) {
             return false;
         }
+
         Circle p = (Circle) o;
         return radius == p.radius;
     }
 
+    @Override
     public int hashCode() {
-        return 37 + Double.hashCode(radius);
+        return Double.hashCode(radius);
     }
 }

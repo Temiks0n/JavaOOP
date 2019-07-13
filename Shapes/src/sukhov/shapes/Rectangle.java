@@ -1,12 +1,12 @@
 package sukhov.shapes;
 
-public class Rectangle implements Shapes {
+public class Rectangle implements Shape {
     private double width;
     private double height;
 
     public Rectangle(double width, double height) {
         if (width < 0 || height < 0) {
-            throw new RuntimeException("Значение должно быть больше нуля");
+            throw new IllegalArgumentException("Значение должно быть больше нуля");
         }
 
         this.width = width;
@@ -15,7 +15,7 @@ public class Rectangle implements Shapes {
 
     public void setWidth(double width) {
         if (width < 0) {
-            throw new RuntimeException("Значение должно быть больше нуля");
+            throw new IllegalArgumentException("Значение должно быть больше нуля");
         }
 
         this.width = width;
@@ -23,7 +23,7 @@ public class Rectangle implements Shapes {
 
     public void setHeight(double height) {
         if (height < 0) {
-            throw new RuntimeException("Значение должно быть больше нуля");
+            throw new IllegalArgumentException("Значение должно быть больше нуля");
         }
 
         this.height = height;
@@ -49,10 +49,12 @@ public class Rectangle implements Shapes {
         return 2 * width + 2 * height;
     }
 
+    @Override
     public String toString() {
         return "прямоугольник: ширина = " + width + ", высота = " + height;
     }
 
+    @Override
     public boolean equals(Object o) {
         if (o == this) {
             return true;
@@ -60,10 +62,12 @@ public class Rectangle implements Shapes {
         if (o == null || o.getClass() != this.getClass()) {
             return false;
         }
+
         Rectangle p = (Rectangle) o;
         return width == p.width && height == p.height;
     }
 
+    @Override
     public int hashCode() {
         final int prime = 37;
         int hash = 1;
