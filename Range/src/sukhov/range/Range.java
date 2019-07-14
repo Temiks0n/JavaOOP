@@ -54,10 +54,10 @@ public class Range {
     }
 
     public Range[] getUnionInterval(Range range) {
-        if (to < range.from) {
+        if (to <= range.from) {
             return new Range[]{new Range(from, to), new Range(range.from, range.to)};
         }
-        if (from > range.to) {
+        if (from >= range.to) {
             return new Range[]{new Range(range.from, range.to), new Range(from, to)};
         }
 
@@ -66,7 +66,7 @@ public class Range {
 
     public Range[] getDifferenceInterval(Range range) {
         if (from >= range.from && to <= range.to) {
-            return null;
+            return new Range[]{};
         }
         if (from > range.to || to < range.from) {
             return new Range[]{new Range(from, to)};
