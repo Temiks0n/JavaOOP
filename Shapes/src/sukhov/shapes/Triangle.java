@@ -73,7 +73,7 @@ public class Triangle implements Shape {
         this.y3 = y3;
     }
 
-    public double getSide(double xFrom, double xTo, double yFrom, double yTo) {
+    private static double getSide(double xFrom, double xTo, double yFrom, double yTo) {
         return Math.sqrt(Math.pow((xTo - xFrom), 2) + Math.pow((yTo - yFrom), 2));
     }
 

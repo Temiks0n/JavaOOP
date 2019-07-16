@@ -16,7 +16,7 @@ public class Circle implements Shape {
     }
 
     public void setRadius(double radius) {
-        if (radius < 0) {
+        if (radius <= 0) {
             throw new IllegalArgumentException("Значение должно быть больше нуля");
         }
 

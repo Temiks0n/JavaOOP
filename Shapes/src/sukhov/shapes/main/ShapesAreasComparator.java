@@ -1,4 +1,6 @@
-package sukhov.shapes;
+package sukhov.shapes.main;
+
+import sukhov.shapes.Shape;
 
 import java.util.Comparator;
 
