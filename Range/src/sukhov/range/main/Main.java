@@ -9,10 +9,10 @@ public class Main {
         Range rangeA = new Range(-4, 4);
         Range rangeB = new Range(-9, -4);
 
-        int digit = 10;
+        int number = 10;
 
         System.out.println("Длина интервала A = " + rangeA.getLength() + " Длина интервала B = " + rangeB.getLength());
-        System.out.println("Число " + digit + " принадлежит диапазону А: " + rangeA.isInside(digit));
+        System.out.println("Число " + number + " принадлежит диапазону А: " + rangeA.isInside(number));
 
         System.out.println("Пересечения интервалов A и B: " + rangeA.getIntersection(rangeB));
         System.out.println("Объединения интервалов A и B: " + Arrays.toString(rangeA.getUnion(rangeB)));
