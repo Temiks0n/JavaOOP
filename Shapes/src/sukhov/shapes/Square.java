@@ -4,7 +4,7 @@ public class Square implements Shape {
     private double side;
 
     public Square(double side) {
-        if (side < 0) {
+        if (side <= 0) {
             throw new IllegalArgumentException("Значение должно быть больше нуля");
         }
 
@@ -12,7 +12,7 @@ public class Square implements Shape {
     }
 
     public void setSide(double side) {
-        if (side < 0) {
+        if (side <= 0) {
             throw new IllegalArgumentException("Значение должно быть больше нуля");
         }
 
