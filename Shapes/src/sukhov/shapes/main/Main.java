@@ -6,12 +6,12 @@ import java.util.Arrays;
 
 public class Main {
 
-    public static Shape searchShapeArea(Shape[] array, int numberLargest) {
+    public static Shape getShapeByArea(Shape[] array, int numberLargest) {
         Arrays.sort(array, new ShapesAreasComparator());
         return array[numberLargest - 1];
     }
 
-    public static Shape searchShapePerimeter(Shape[] array, int numberLargest) {
+    public static Shape getShapeByPerimeter(Shape[] array, int numberLargest) {
         Arrays.sort(array, new ShapesPerimeterComparator());
         return array[numberLargest - 1];
     }
@@ -29,8 +29,8 @@ public class Main {
         Shape[] shapes = {triangle1, triangle2, circle1, circle2, rectangle1, rectangle2, square1, square2};
         System.out.println("Список фигур: " + Arrays.toString(shapes));
 
-        Shape maxArea = searchShapeArea(shapes, 1);
-        Shape secondMaxPerimeter = searchShapePerimeter(shapes, 2);
+        Shape maxArea = getShapeByArea(shapes, 1);
+        Shape secondMaxPerimeter = getShapeByPerimeter(shapes, 2);
 
         System.out.printf("Фигура с максимальной площадью: %s; площадь: %f; периметр: %f; высота: %f; ширина: %f%n", maxArea, maxArea.getArea(), maxArea.getPerimeter(), maxArea.getHeight(), maxArea.getWidth());
         System.out.printf("Фигура со второй по величине периметром: %s; площадь: %f; периметр: %f; высота: %f; ширина: %f%n", secondMaxPerimeter, secondMaxPerimeter.getArea(), secondMaxPerimeter.getPerimeter(), secondMaxPerimeter.getHeight(), secondMaxPerimeter.getWidth());

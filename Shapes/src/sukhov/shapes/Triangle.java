@@ -9,8 +9,12 @@ public class Triangle implements Shape {
     private double y3;
     private final double epsilon = 1.0e-10;
 
+    private boolean isDirectLine() {
+        return Math.abs(((x3 - x1) * (y2 - y1)) - ((y3 - y1) * (x2 - x1))) <= epsilon;
+    }
+
     public Triangle(double x1, double y1, double x2, double y2, double x3, double y3) {
-        if (Math.abs(((x3 - x1) * (y2 - y1)) - ((y3 - y1) * (x2 - x1))) <= epsilon) {
+        if (isDirectLine()) {
             throw new IllegalArgumentException("Точки лежат на одной прямой");
         }
 
@@ -47,7 +51,7 @@ public class Triangle implements Shape {
     }
 
     public void setXY1(double x1, double y1) {
-        if (Math.abs(((x3 - x1) * (y2 - y1)) - ((y3 - y1) * (x2 - x1))) <= epsilon) {
+        if (isDirectLine()) {
             throw new IllegalArgumentException("Точки лежат на одной прямой");
         }
 
@@ -56,7 +60,7 @@ public class Triangle implements Shape {
     }
 
     public void setXY2(double x2, double y2) {
-        if (Math.abs(((x3 - x1) * (y2 - y1)) - ((y3 - y1) * (x2 - x1))) <= epsilon) {
+        if (isDirectLine()) {
             throw new IllegalArgumentException("Точки лежат на одной прямой");
         }
 
@@ -65,7 +69,7 @@ public class Triangle implements Shape {
     }
 
     public void setXY3(double x3, double y3) {
-        if (Math.abs(((x3 - x1) * (y2 - y1)) - ((y3 - y1) * (x2 - x1))) <= epsilon) {
+        if (isDirectLine()) {
             throw new IllegalArgumentException("Точки лежат на одной прямой");
         }
 
