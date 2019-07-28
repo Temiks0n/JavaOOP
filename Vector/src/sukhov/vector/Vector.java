@@ -14,7 +14,7 @@ public class Vector {
     }
 
     public Vector(Vector vector) {
-        this.components = Arrays.copyOf(vector.components, vector.getSize());
+        components = Arrays.copyOf(vector.components, vector.getSize());
     }
 
     public Vector(double[] components) {
@@ -39,7 +39,7 @@ public class Vector {
 
     public double getComponent(int index) {
         if (index < 0 || index >= components.length) {
-            throw new ArrayIndexOutOfBoundsException("Неверный индекс");
+            throw new IndexOutOfBoundsException("Неверный индекс");
         }
 
         return components[index];
@@ -58,9 +58,7 @@ public class Vector {
             components = Arrays.copyOf(components, vector.getSize());
         }
 
-        int minSize = Math.min(vector.getSize(), components.length);
-
-        for (int i = 0; i < minSize; i++) {
+        for (int i = 0; i < vector.getSize(); i++) {
             components[i] += vector.components[i];
         }
     }
@@ -77,9 +75,7 @@ public class Vector {
             components = Arrays.copyOf(components, vector.getSize());
         }
 
-        int minSize = Math.min(vector.getSize(), components.length);
-
-        for (int i = 0; i < minSize; i++) {
+        for (int i = 0; i < vector.getSize(); i++) {
             components[i] -= vector.components[i];
         }
     }
@@ -155,11 +151,12 @@ public class Vector {
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
 
+        stringBuilder.append("{");
         for (double component : components) {
             stringBuilder.append(component).append(", ");
         }
-        stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length());
+        stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length()).append("}");
 
-        return "{" + stringBuilder + "}";
+        return stringBuilder.toString();
     }
 }
