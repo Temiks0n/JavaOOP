@@ -115,7 +115,7 @@ public class Vector {
             length += Math.pow(e, 2);
         }
 
-        return length;
+        return Math.sqrt(length);
     }
 
     @Override
