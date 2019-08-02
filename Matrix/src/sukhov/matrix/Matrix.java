@@ -211,37 +211,38 @@ public class Matrix {
         if (getSizeColumn() == 2) {
             return getMatrixElement(0, 0) * getMatrixElement(1, 1) - getMatrixElement(0, 1) * getMatrixElement(1, 0);
         }
-        if (getSizeColumn() == 3) {
-            double a1 = getMatrixElement(0, 0) * getMatrixElement(1, 1) * getMatrixElement(2, 2);
-            double a2 = getMatrixElement(0, 1) * getMatrixElement(1, 2) * getMatrixElement(2, 0);
-            double a3 = getMatrixElement(0, 2) * getMatrixElement(1, 0) * getMatrixElement(2, 1);
-            double b1 = getMatrixElement(0, 2) * getMatrixElement(1, 1) * getMatrixElement(2, 0);
-            double b2 = getMatrixElement(0, 1) * getMatrixElement(1, 0) * getMatrixElement(2, 2);
-            double b3 = getMatrixElement(0, 0) * getMatrixElement(1, 2) * getMatrixElement(2, 1);
+
+        return getMatrixDeterminant(new Matrix(matrixElements));
+    }
+
+    private double getMatrixDeterminant(Matrix matrix) {
+        if (matrix.getSizeColumn() == 3) {
+            double a1 = matrix.getMatrixElement(0, 0) * matrix.getMatrixElement(1, 1) * matrix.getMatrixElement(2, 2);
+            double a2 = matrix.getMatrixElement(0, 1) * matrix.getMatrixElement(1, 2) * matrix.getMatrixElement(2, 0);
+            double a3 = matrix.getMatrixElement(0, 2) * matrix.getMatrixElement(1, 0) * matrix.getMatrixElement(2, 1);
+            double b1 = matrix.getMatrixElement(0, 2) * matrix.getMatrixElement(1, 1) * matrix.getMatrixElement(2, 0);
+            double b2 = matrix.getMatrixElement(0, 1) * matrix.getMatrixElement(1, 0) * matrix.getMatrixElement(2, 2);
+            double b3 = matrix.getMatrixElement(0, 0) * matrix.getMatrixElement(1, 2) * matrix.getMatrixElement(2, 1);
 
             return (a1 + a2 + a3) - (b1 + b2 + b3);        // ничего что разделил так? иначе слишком длинный код?
         }
 
-        double[][] matrixDecomposition = new double[getSizeColumn() - 1][getSizeColumn() - 1];
-
-        return getMatrixDeterminant(matrixDecomposition);
-    }
-
-    private double getMatrixDeterminant(double[][] matrixDecomposition) {
         double determinant = 0;
 
-        for (int i = 0; i < getSizeColumn(); i++) {
-            for (int column = 1; column < getSizeColumn(); column++) {
-                for (int row = 0; row < getSizeColumn(); row++) {
+        for (int i = 0; i < matrix.getSizeColumn(); i++) {
+            double[][] matrixDecomposition = new double[matrix.getSizeColumn() - 1][matrix.getSizeRow() - 1];
 
-                    if (row < i) {
-                        matrixDecomposition[column - 1][row] = getMatrixElement(column, row);
-                    } else if (row > i) {
-                        matrixDecomposition[column - 1][row - 1] = getMatrixElement(column, row);
+            for (int row = 1; row < matrix.getSizeRow(); row++) {
+                for (int column = 0; column < matrix.getSizeColumn(); column++) {
+
+                    if (column < i) {
+                        matrixDecomposition[row - 1][column] = matrix.getMatrixElement(row, column);
+                    } else if (column > i) {
+                        matrixDecomposition[row - 1][column - 1] = matrix.getMatrixElement(row, column);
                     }
                 }
             }
-            determinant += getMatrixElement(0, i) * Math.pow(-1, i + 2) * getMatrixDeterminant(matrixDecomposition);
+            determinant += matrix.getMatrixElement(0, i) * Math.pow(-1, i + 2) * matrix.getMatrixDeterminant(new Matrix(matrixDecomposition));
         }
 
         return determinant;

@@ -25,7 +25,7 @@ public class NumberFromFile {
 
         for (int i = 0; i < listNumbers.size(); i++) {
             int temp = listNumbers.get(i);
-            
+
             for (int j = i + 1; j < listNumbers.size(); j++) {
                 if (listNumbers.get(j) == temp) {
                     listNumbers.remove(j);
