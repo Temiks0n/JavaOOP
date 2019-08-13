@@ -18,7 +18,7 @@ public class Main {
         Matrix matrix8 = new Matrix(new double[][]{{5, 9, 5}, {2, 5, 1}, {4, 7, 2}});
         Matrix matrix4 = new Matrix(1, 1);
         Matrix copyMatrix1 = new Matrix(matrix1);
-
+        Matrix matrix7 = new Matrix(new double[][]{{1, -3, 0, 2}, {2, 0, 1, 1}, {-4, 3, 2, 4}, {1, -2, 0, 2}});
 
         matrix1.addition(copyMatrix1);
         Matrix matrix6 = subtraction(matrix1, copyMatrix1);
@@ -28,9 +28,9 @@ public class Main {
 
         System.out.println("Сумма матрицы 1 и ее копия = " + matrix1);
         System.out.println("Разность матрица 2 и матрица 1 = " + matrix6);
-        System.out.println("Транспонирование матрицы 3 = " +  matrix8);
+        System.out.println("Транспонирование матрицы 8 = " + matrix8);
         System.out.println("Умножение матрицы 2 и 1 = " + matrix5);
-        System.out.println("Определителя матрицы 8  = " + matrix8.getDeterminant());
+        System.out.println("Определителя матрицы 7  = " + matrix7.getDeterminant());
         System.out.println("Умножение матрицы 2 на скаляр = " + matrix2);
         System.out.println("Умножение матрицы 8 на вектор 3 = " + matrix8.multiplication(vector3));
     }
