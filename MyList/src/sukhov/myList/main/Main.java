@@ -11,7 +11,7 @@ public class Main {
         linkedList.addFirst(2);
         linkedList.add(0, 3);
         linkedList.remove(3);
-        linkedList.removeElement(2);
+        linkedList.removeElement(null);
 
         System.out.println("изменить по индексу 0 на значение 9: " + linkedList.setData(0, 9));
         System.out.println("удалить по индексу 1: " + linkedList.remove(0));
@@ -23,14 +23,13 @@ public class Main {
         linkedList.addFirst(8);
         linkedList.add(3, 4);
 
-        linkedList.reversal();
-        System.out.println("развернутый список: ");
-        linkedList.print();
+        linkedList.getReversal();
+        System.out.println("развернутый список: " + linkedList.toString());
 
         SinglyLinkedList<Integer> linkedListCopy = new SinglyLinkedList<>(linkedList);
         linkedList.setData(2, 9);
 
-        System.out.println("копия списка: ");
-        linkedListCopy.print();
+        System.out.println("копия списка: " + linkedListCopy.toString());
+
     }
 }

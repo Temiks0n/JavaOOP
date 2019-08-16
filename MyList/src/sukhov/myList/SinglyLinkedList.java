@@ -2,18 +2,25 @@ package sukhov.myList;
 
 public class SinglyLinkedList<T> {
     private ListItem<T> head;
-    private int count = 0;
+    private int count;
 
     public SinglyLinkedList() {
     }
 
     public SinglyLinkedList(SinglyLinkedList<T> copy) {
+        if (copy.head == null) {
+            throw new NullPointerException("Переданный список пустой");
+        }
+
         head = new ListItem<>(copy.getFirstData());
         count = copy.count;
+        ListItem<T> copyList = copy.head;
         ListItem<T> list = head;
 
         for (int i = 1; i < count; i++) {
-            ListItem<T> temp = new ListItem<>(copy.getData(i));
+            copyList = copyList.getNext();
+            ListItem<T> temp = new ListItem<>(copyList.getData());
+
             list.setNext(temp);
             list = list.getNext();
         }
@@ -24,7 +31,21 @@ public class SinglyLinkedList<T> {
     }
 
     public T getFirstData() {
+        if (head == null) {
+            throw new NullPointerException("Список пустой");
+        }
+
         return head.getData();
+    }
+
+    private ListItem<T> iterationList(int index) {
+        ListItem<T> list = head;
+
+        for (int i = 0; i < index; i++) {
+            list = list.getNext();
+        }
+
+        return list;
     }
 
     public T getData(int index) {
@@ -32,27 +53,16 @@ public class SinglyLinkedList<T> {
             throw new IndexOutOfBoundsException("Неверный индекс списка");
         }
 
-        ListItem<T> list = head;
-
-        for (int i = 0; i < index; i++) {
-            list = list.getNext();
-        }
-
-        return list.getData();
+        return iterationList(index).getData();
     }
 
-    public T setData(int index, T e) {
+    public T setData(int index, T newData) {
         if (index < 0 || index >= count) {
             throw new IndexOutOfBoundsException("Неверный индекс списка");
         }
 
         T data = getData(index);
-        ListItem<T> list = head;
-
-        for (int i = 0; i < index; i++) {
-            list = list.getNext();
-        }
-        list.setData(e);
+        iterationList(index).setData(newData);
 
         return data;
     }
@@ -64,7 +74,7 @@ public class SinglyLinkedList<T> {
     }
 
     public void add(int index, T data) {
-        if (index < 0 || index >= count + 1) {
+        if (index < 0 || index > count) {
             throw new IndexOutOfBoundsException("Неверный индекс списка");
         }
 
@@ -123,29 +133,39 @@ public class SinglyLinkedList<T> {
     }
 
     public boolean removeElement(T data) {
-        boolean isEqual = false;
+        if (head == null) {
+            throw new NullPointerException("Список пустой");
+        }
+
+        boolean listHasData = false;
 
         if (head.getData() == data) {
             head = head.getNext();
-            isEqual = true;
+            listHasData = true;
+
             count--;
         } else {
-            for (ListItem<T> list = head; list != null; list = list.getNext()) {
+            for (ListItem<T> list = head; list.getNext() != null; list = list.getNext()) {
                 if (list.getNext().getData() == data) {
                     list.setNext(list.getNext().getNext());
-                    isEqual = true;
+                    listHasData = true;
+
                     count--;
                     break;
                 }
             }
         }
 
-        return isEqual;
+        return listHasData;
     }
 
-    public void reversal() {
-        ListItem<T> decreasing = head;
+    public void getReversal() {
+        if (head == null) {
+            throw new NullPointerException("Список пустой");
+        }
+
         ListItem<T> increasing;
+        ListItem<T> decreasing = head;
         ListItem<T> temp = null;
 
         for (int i = 0; i < count; i++) {
@@ -159,9 +179,20 @@ public class SinglyLinkedList<T> {
         }
     }
 
-    public void print() {
-        for (ListItem<T> list = head; list != null; list = list.getNext()) {
-            System.out.println(list.getData());
+@Override
+    public String toString() {
+        if (head == null) {
+            throw new NullPointerException("Список пустой");
         }
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("{");
+        for (ListItem<T> list = head; list != null; list = list.getNext()) {
+            stringBuilder.append(list.getData()).append(", ");
+        }
+        stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length()).append("}");
+
+        return stringBuilder.toString();
     }
 }
