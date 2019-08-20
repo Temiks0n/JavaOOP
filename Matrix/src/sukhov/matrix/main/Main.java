@@ -32,7 +32,7 @@ public class Main {
         System.out.println("Умножение матрицы 2 и 1 = " + matrix5);
         System.out.println("Определителя матрицы 7  = " + matrix7.getDeterminant());
         System.out.println("Умножение матрицы 2 на скаляр = " + matrix2);
-        System.out.println("Умножение матрицы 8 на вектор 3 = " + matrix8.multiplication(vector3));
+        System.out.println("Умножение матрицы 3 на вектор 3 = " +  matrix3.multiplication(vector3));
     }
 }
 
