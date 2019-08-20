@@ -8,8 +8,8 @@ public class SinglyLinkedList<T> {
     }
 
     public SinglyLinkedList(SinglyLinkedList<T> copy) {
-        if (copy.head == null) {
-            throw new NullPointerException("Переданный список пустой");
+        if (copy.count == 0) {
+            return;
         }
 
         head = new ListItem<>(copy.getFirstData());
@@ -38,7 +38,7 @@ public class SinglyLinkedList<T> {
         return head.getData();
     }
 
-    private ListItem<T> iterationList(int index) {
+    private ListItem<T> getListItemIndex(int index) {
         ListItem<T> list = head;
 
         for (int i = 0; i < index; i++) {
@@ -53,7 +53,7 @@ public class SinglyLinkedList<T> {
             throw new IndexOutOfBoundsException("Неверный индекс списка");
         }
 
-        return iterationList(index).getData();
+        return getListItemIndex(index).getData();
     }
 
     public T setData(int index, T newData) {
@@ -61,8 +61,9 @@ public class SinglyLinkedList<T> {
             throw new IndexOutOfBoundsException("Неверный индекс списка");
         }
 
-        T data = getData(index);
-        iterationList(index).setData(newData);
+        ListItem<T> list = getListItemIndex(index);
+        T data = list.getData();
+        list.setData(newData);
 
         return data;
     }
@@ -78,18 +79,15 @@ public class SinglyLinkedList<T> {
             throw new IndexOutOfBoundsException("Неверный индекс списка");
         }
 
-        ListItem<T> list = new ListItem<>(data);
-        ListItem<T> p = head;
+        ListItem<T> addition = new ListItem<>(data);
 
         if (index == 0) {
-            list.setNext(head);
-            head = list;
+            addition.setNext(head);
+            head = addition;
         } else {
-            for (int i = 1; i < index; i++) {
-                p = p.getNext();
-            }
-            list.setNext(p.getNext());
-            p.setNext(list);
+            ListItem<T> p = getListItemIndex(index - 1);
+            addition.setNext(p.getNext());
+            p.setNext(addition);
         }
 
         count++;
@@ -113,16 +111,12 @@ public class SinglyLinkedList<T> {
             throw new IndexOutOfBoundsException("Неверный индекс списка");
         }
 
-        ListItem<T> list = head;
         ListItem<T> temp;
-
         if (index == 0) {
             temp = head;
             head = head.getNext();
         } else {
-            for (int i = 1; i < index; i++) {
-                list = list.getNext();
-            }
+            ListItem<T> list = getListItemIndex(index - 1);
             temp = list.getNext();
             list.setNext(list.getNext().getNext());
         }
@@ -133,13 +127,13 @@ public class SinglyLinkedList<T> {
     }
 
     public boolean removeElement(T data) {
-        if (head == null) {
-            throw new NullPointerException("Список пустой");
-        }
-
         boolean listHasData = false;
 
-        if (head.getData() == data) {
+        if (count == 0) {
+            return listHasData;
+        }
+
+        if (head.getData().equals(data)) {
             head = head.getNext();
             listHasData = true;
 
@@ -159,17 +153,16 @@ public class SinglyLinkedList<T> {
         return listHasData;
     }
 
-    public void getReversal() {
-        if (head == null) {
-            throw new NullPointerException("Список пустой");
+    public void reverse() {
+        if (count == 0) {
+            return;
         }
 
-        ListItem<T> increasing;
         ListItem<T> decreasing = head;
         ListItem<T> temp = null;
 
         for (int i = 0; i < count; i++) {
-            increasing = decreasing;
+            ListItem<T> increasing = decreasing;
             decreasing = decreasing.getNext();
 
             increasing.setNext(temp);
@@ -179,13 +172,13 @@ public class SinglyLinkedList<T> {
         }
     }
 
-@Override
+    @Override
     public String toString() {
-        if (head == null) {
-            throw new NullPointerException("Список пустой");
-        }
-
         StringBuilder stringBuilder = new StringBuilder();
+
+        if (count == 0) {
+            return stringBuilder.append("Список пустой").toString();
+        }
 
         stringBuilder.append("{");
         for (ListItem<T> list = head; list != null; list = list.getNext()) {

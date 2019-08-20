@@ -23,13 +23,16 @@ public class Main {
         linkedList.addFirst(8);
         linkedList.add(3, 4);
 
-        linkedList.getReversal();
-        System.out.println("развернутый список: " + linkedList.toString());
+        linkedList.reverse();
+        System.out.println("развернутый список: " + linkedList);
 
         SinglyLinkedList<Integer> linkedListCopy = new SinglyLinkedList<>(linkedList);
         linkedList.setData(2, 9);
 
-        System.out.println("копия списка: " + linkedListCopy.toString());
+        System.out.println("копия списка: " + linkedListCopy);
 
+        SinglyLinkedList<Integer> linkedList2 = new SinglyLinkedList<>();
+        SinglyLinkedList<Integer> linkedList3 = new SinglyLinkedList<>(linkedList2);
+        System.out.println("список 3: " + linkedList3);
     }
 }
