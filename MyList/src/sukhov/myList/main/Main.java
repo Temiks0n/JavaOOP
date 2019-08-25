@@ -33,6 +33,14 @@ public class Main {
 
         SinglyLinkedList<Integer> linkedList2 = new SinglyLinkedList<>();
         SinglyLinkedList<Integer> linkedList3 = new SinglyLinkedList<>(linkedList2);
+
+        linkedList3.addFirst(2);
+        linkedList3.addFirst(6);
+        linkedList3.addFirst(8);
+        linkedList3.add(3, 4);
+        linkedList3.add(2, null);
+        linkedList3.removeElement(null);
+
         System.out.println("список 3: " + linkedList3);
     }
 }

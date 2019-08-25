@@ -14,15 +14,15 @@ public class SinglyLinkedList<T> {
 
         head = new ListItem<>(copy.getFirstData());
         count = copy.count;
-        ListItem<T> copyList = copy.head;
-        ListItem<T> list = head;
+        ListItem<T> copyListItem = copy.head;
+        ListItem<T> listItem = head;
 
         for (int i = 1; i < count; i++) {
-            copyList = copyList.getNext();
-            ListItem<T> temp = new ListItem<>(copyList.getData());
+            copyListItem = copyListItem.getNext();
+            ListItem<T> temp = new ListItem<>(copyListItem.getData());
 
-            list.setNext(temp);
-            list = list.getNext();
+            listItem.setNext(temp);
+            listItem = listItem.getNext();
         }
     }
 
@@ -38,7 +38,7 @@ public class SinglyLinkedList<T> {
         return head.getData();
     }
 
-    private ListItem<T> getListItemIndex(int index) {
+    private ListItem<T> getListItem(int index) {
         ListItem<T> list = head;
 
         for (int i = 0; i < index; i++) {
@@ -53,7 +53,7 @@ public class SinglyLinkedList<T> {
             throw new IndexOutOfBoundsException("Неверный индекс списка");
         }
 
-        return getListItemIndex(index).getData();
+        return getListItem(index).getData();
     }
 
     public T setData(int index, T newData) {
@@ -61,7 +61,7 @@ public class SinglyLinkedList<T> {
             throw new IndexOutOfBoundsException("Неверный индекс списка");
         }
 
-        ListItem<T> list = getListItemIndex(index);
+        ListItem<T> list = getListItem(index);
         T data = list.getData();
         list.setData(newData);
 
@@ -85,7 +85,7 @@ public class SinglyLinkedList<T> {
             addition.setNext(head);
             head = addition;
         } else {
-            ListItem<T> p = getListItemIndex(index - 1);
+            ListItem<T> p = getListItem(index - 1);
             addition.setNext(p.getNext());
             p.setNext(addition);
         }
@@ -116,7 +116,7 @@ public class SinglyLinkedList<T> {
             temp = head;
             head = head.getNext();
         } else {
-            ListItem<T> list = getListItemIndex(index - 1);
+            ListItem<T> list = getListItem(index - 1);
             temp = list.getNext();
             list.setNext(list.getNext().getNext());
         }
@@ -127,30 +127,34 @@ public class SinglyLinkedList<T> {
     }
 
     public boolean removeElement(T data) {
-        boolean listHasData = false;
-
         if (count == 0) {
-            return listHasData;
+            return false;
         }
 
         if (head.getData().equals(data)) {
             head = head.getNext();
-            listHasData = true;
 
             count--;
+            return true;
         } else {
             for (ListItem<T> list = head; list.getNext() != null; list = list.getNext()) {
-                if (list.getNext().getData() == data) {
+                if (data == null && list.getNext().getData() == null) {
                     list.setNext(list.getNext().getNext());
-                    listHasData = true;
 
                     count--;
-                    break;
+                    return true;
+                }
+
+                if (list.getNext().getData().equals(data)) {
+                    list.setNext(list.getNext().getNext());
+
+                    count--;
+                    return true;
                 }
             }
         }
 
-        return listHasData;
+        return false;
     }
 
     public void reverse() {
@@ -177,7 +181,7 @@ public class SinglyLinkedList<T> {
         StringBuilder stringBuilder = new StringBuilder();
 
         if (count == 0) {
-            return stringBuilder.append("Список пустой").toString();
+            return stringBuilder.append("{}").toString();
         }
 
         stringBuilder.append("{");
