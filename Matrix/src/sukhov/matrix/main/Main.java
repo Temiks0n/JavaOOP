@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) {
         Vector vector1 = new Vector(new double[]{3, 4, 4});
         Vector vector2 = new Vector(new double[]{2, 6, 7});
-        Vector vector3 = new Vector(new double[]{-1, 1});
+        Vector vector3 = new Vector(new double[]{-1, 1, 7, 3, 2});
 
         Matrix matrix1 = new Matrix(vector1, vector2);
         Matrix matrix2 = new Matrix(new double[][]{{1, 9}, {4, 7}, {3, 6}});
@@ -32,7 +32,7 @@ public class Main {
         System.out.println("Умножение матрицы 2 и 1 = " + matrix5);
         System.out.println("Определителя матрицы 7  = " + matrix7.getDeterminant());
         System.out.println("Умножение матрицы 2 на скаляр = " + matrix2);
-        System.out.println("Умножение матрицы 3 на вектор 3 = " +  matrix3.multiplication(vector3));
+        System.out.println("Умножение матрицы 3 на вектор 3 = " + matrix3.multiplication(vector3));
     }
 }
 

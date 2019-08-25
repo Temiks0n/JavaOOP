@@ -39,6 +39,10 @@ public class Matrix {
             }
         }
 
+        if (maxSize == 0) {
+            throw new IllegalArgumentException("Размерность второго порядка хотя бы одного массива должна быть > 0");
+        }
+
         rows = new Vector[matrix.length];
 
         for (int i = 0; i < rows.length; i++) {
@@ -140,9 +144,7 @@ public class Matrix {
             result[i] = getColumn(i);
         }
 
-        rows = new Vector[result.length];
-
-        System.arraycopy(result, 0, rows, 0, rows.length);
+        rows = result;
     }
 
     public void addition(Matrix matrix) {
@@ -196,15 +198,15 @@ public class Matrix {
     }
 
     public Vector multiplication(Vector column) {
-        if (getRowsCount() != column.getSize()) {
-            throw new IllegalArgumentException("Размерность строк должна совподать с размерностью вектора");
+        if (getColumnsCount() != column.getSize()) {
+            throw new IllegalArgumentException("Размерность столбцов должна совпадать с размерностью вектора");
         }
 
         double[] result = new double[column.getSize()];
 
         for (int i = 0; i < result.length; i++) {
-            for (int j = 0; j < getColumnsCount(); j++) {
-                result[i] += getElement(i, j) * column.getComponent(i);
+            for (int j = 0; j < getRowsCount(); j++) {
+                result[i] += getElement(j, i) * column.getComponent(i);
             }
         }
 
