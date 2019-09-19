@@ -1,5 +1,7 @@
 package sukhov.myList;
 
+import java.util.Objects;
+
 public class SinglyLinkedList<T> {
     private ListItem<T> head;
     private int count;
@@ -131,26 +133,19 @@ public class SinglyLinkedList<T> {
             return false;
         }
 
-        if (head.getData().equals(data)) {
+        if (Objects.equals(head.getData(), data)) {
             head = head.getNext();
 
             count--;
             return true;
-        } else {
-            for (ListItem<T> list = head; list.getNext() != null; list = list.getNext()) {
-                if (data == null && list.getNext().getData() == null) {
-                    list.setNext(list.getNext().getNext());
+        }
 
-                    count--;
-                    return true;
-                }
+        for (ListItem<T> list = head; list.getNext() != null; list = list.getNext()) {
+            if (Objects.equals(list.getNext().getData(), data)) {
+                list.setNext(list.getNext().getNext());
 
-                if (list.getNext().getData().equals(data)) {
-                    list.setNext(list.getNext().getNext());
-
-                    count--;
-                    return true;
-                }
+                count--;
+                return true;
             }
         }
 

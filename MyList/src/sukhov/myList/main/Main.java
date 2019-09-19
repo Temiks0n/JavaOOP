@@ -39,6 +39,7 @@ public class Main {
         linkedList3.addFirst(8);
         linkedList3.add(3, 4);
         linkedList3.add(2, null);
+        linkedList3.addFirst(null);
         linkedList3.removeElement(null);
 
         System.out.println("список 3: " + linkedList3);
