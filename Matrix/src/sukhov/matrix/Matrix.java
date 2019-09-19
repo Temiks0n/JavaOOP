@@ -198,15 +198,15 @@ public class Matrix {
     }
 
     public Vector multiplication(Vector column) {
-        if (getColumnsCount() != column.getSize()) {
-            throw new IllegalArgumentException("Размерность столбцов должна совпадать с размерностью вектора");
+        if (getRowsCount() != column.getSize()) {
+            throw new IllegalArgumentException("Размерность строк должна совпадать с размерностью вектора");
         }
 
         double[] result = new double[column.getSize()];
 
         for (int i = 0; i < result.length; i++) {
-            for (int j = 0; j < getRowsCount(); j++) {
-                result[i] += getElement(j, i) * column.getComponent(i);
+            for (int j = 0; j < getColumnsCount(); j++) {
+                result[i] += getElement(i, j) * column.getComponent(i);
             }
         }
 

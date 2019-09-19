@@ -14,7 +14,7 @@ public class Main {
 
         Matrix matrix1 = new Matrix(vector1, vector2);
         Matrix matrix2 = new Matrix(new double[][]{{1, 9}, {4, 7}, {3, 6}});
-        Matrix matrix3 = new Matrix(new double[][]{{5, 9, 5, 7, 8}, {6, 2, 4, 7, 4}});
+        Matrix matrix3 = new Matrix(new double[][]{{5, 9}, {5, 3}, {2, 5}, {1, 2}, {2, 4}});
         Matrix matrix8 = new Matrix(new double[][]{{5, 9}, {2, 5}, {4, 7}});
         Matrix matrix4 = new Matrix(1, 1);
         Matrix copyMatrix1 = new Matrix(matrix1);
