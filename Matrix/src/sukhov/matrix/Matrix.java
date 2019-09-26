@@ -2,8 +2,6 @@ package sukhov.matrix;
 
 import sukhov.vector.Vector;
 
-import java.util.Arrays;
-
 public class Matrix {
     private Vector[] rows;
 
@@ -199,14 +197,14 @@ public class Matrix {
 
     public Vector multiplication(Vector column) {
         if (getRowsCount() != column.getSize()) {
-            throw new IllegalArgumentException("Размерность строк должна совпадать с размерностью вектора");
+            throw new IllegalArgumentException("Размерность столбца должна совпадать с размерностью вектора");
         }
 
-        double[] result = new double[column.getSize()];
+        double[] result = new double[getColumnsCount()];
 
         for (int i = 0; i < result.length; i++) {
-            for (int j = 0; j < getColumnsCount(); j++) {
-                result[i] += getElement(i, j) * column.getComponent(i);
+            for (int j = 0; j < getRowsCount(); j++) {
+                result[i] += getElement(j, i) * column.getComponent(j);
             }
         }
 
