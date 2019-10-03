@@ -1,22 +1,20 @@
 package sukhov.myHashTable;
 
-public class HashItem<K, V> {
+public class HashItem<T> {
     private int hash;
-    private K key;
-    private V value;
-    private HashItem<K, V> next;
+    private T data;
+    private HashItem<T> next;
 
-    public HashItem(K key, V value, int hash) {
-        this.key = key;
-        this.value = value;
+    public HashItem(T data, int hash) {
+        this.data = data;
         this.hash = hash;
     }
 
-    public HashItem<K, V> getNext() {
+    public HashItem<T> getNext() {
         return next;
     }
 
-    public void setNext(HashItem<K, V> next) {
+    public void setNext(HashItem<T> next) {
         this.next = next;
     }
 
@@ -24,16 +22,8 @@ public class HashItem<K, V> {
         return hash;
     }
 
-    public K getKey() {
-        return key;
-    }
-
-    public V getValue() {
-        return value;
-    }
-
-    public void setValue(V value) {
-        this.value = value;
+    public T getData() {
+        return data;
     }
 
     @Override
@@ -45,7 +35,7 @@ public class HashItem<K, V> {
             return false;
         }
         @SuppressWarnings("unchecked")
-        HashItem<K, V> k = (HashItem<K, V>) o;
-        return k.hash == hash && k.key == key && k.value == value;
+        HashItem<T> d = (HashItem<T>) o;
+        return d.hash == hash && d.data == data;
     }
 }

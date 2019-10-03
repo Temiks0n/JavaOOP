@@ -2,16 +2,16 @@ package sukhov.myHashTable;
 
 import java.util.*;
 
-public class MyHashTable<K, V> implements Collection<V> {
-    private HashItem<K, V>[] table;
+public class MyHashTable<T> implements Collection<T> {
+    private HashItem<T>[] table;
     private int size;
     private int modCount;
 
-    private class HashTableIterator implements Iterator<V> {
+    private class HashTableIterator implements Iterator<T> {
         private int currentIndex = -1;
         private int modCountIterator = modCount;
         private int index;
-        HashItem<K, V> next;
+        HashItem<T> next;
 
         @Override
         public boolean hasNext() {
@@ -19,7 +19,7 @@ public class MyHashTable<K, V> implements Collection<V> {
         }
 
         @Override
-        public V next() {
+        public T next() {
             if (modCountIterator != modCount) {
                 throw new ConcurrentModificationException("Были изменения");
             }
@@ -36,14 +36,14 @@ public class MyHashTable<K, V> implements Collection<V> {
                         next = table[index];
                     }
 
-                    V value = next.getValue();
+                    T data = next.getData();
                     next = next.getNext();
 
                     if (next == null) {
                         index++;
                     }
 
-                    return value;
+                    return data;
                 }
                 index++;
             }
@@ -54,7 +54,7 @@ public class MyHashTable<K, V> implements Collection<V> {
 
     public MyHashTable() {
         //noinspection unchecked
-        table = new HashItem[15];
+        table = new HashItem[20];
     }
 
     public MyHashTable(int length) {
@@ -70,30 +70,64 @@ public class MyHashTable<K, V> implements Collection<V> {
         return size;
     }
 
-    public int getHash(K key) {
-        return Math.abs(key.hashCode() % table.length);
+    private int getHash(T data) {
+        return Math.abs(data.hashCode() % table.length);
     }
 
-    public boolean put(K key, V value) {
-        if (key == null) {
-            throw new IndexOutOfBoundsException("Неверный ключ");
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    @Override
+    public boolean contains(Object data) {
+        for (T d : this) {
+            if (d == data) {
+                return true;
+            }
         }
 
-        int hash = getHash(key);
-        HashItem<K, V> hashItem = new HashItem<>(key, value, hash);
+        return false;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new HashTableIterator();
+    }
+
+    @Override
+    public Object[] toArray() {
+        //noinspection unchecked
+        T[] arrayData = (T[]) new Object[size];
+        int i = 0;
+        for (T data : this) {
+            arrayData[i] = data;
+            i++;
+        }
+
+        return arrayData;
+    }
+
+    @Override
+    public boolean add(T data) {
+        if (data == null) {
+            throw new IndexOutOfBoundsException("Null значения");
+        }
+
+        int hash = getHash(data);
+        HashItem<T> hashItem = new HashItem<>(data, hash);
 
         if (table[hash] == null) {
             table[hash] = hashItem;
         } else {
-            if (table[hash].equals(hashItem)) {
-                table[hash] = hashItem;
-                return true;
+            if (table[hash].getData().equals(hashItem.getData())) {
+                return false;
             }
 
-            HashItem<K, V> temp = table[hash];
+            HashItem<T> temp = table[hash];
 
             while (temp.getNext() != null) {
-                if (hashItem.equals(temp.getNext())) {
+                if (hashItem.getData().equals(temp.getNext().getData())) {
                     temp.setNext(hashItem);
 
                     size++;
@@ -111,103 +145,34 @@ public class MyHashTable<K, V> implements Collection<V> {
         return true;
     }
 
-    public V getValue(K key) {
-        if (key == null) {
-            throw new IndexOutOfBoundsException("Неверный ключ");
-        }
-
-        int hash = getHash(key);
-        HashItem<K, V> temp = table[hash];
-
-        while (temp != null) {
-            if (key.equals(temp.getKey())) {
-                return temp.getValue();
-            }
-            temp = temp.getNext();
-        }
-
-        return null;
-    }
-
-    public boolean remove(K key, V value) {
-        if (table[getHash(key)].getValue().equals(value)) {
-            return remove(key);
-        }
-
-        return false;
-    }
-
     @Override
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    @Override
-    public boolean contains(Object value) {
-        for (V v : this) {
-            if (v == value) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    public Iterator<V> iterator() {
-        return new HashTableIterator();
-    }
-
-    @Override
-    public Object[] toArray() {
-        //noinspection unchecked
-        V[] arrayValues = (V[]) new Object[size];
-        int i = 0;
-        for (V v : this) {
-            arrayValues[i] = v;
-            i++;
-        }
-
-        return arrayValues;
-    }
-
-    @Override
-    public boolean add(V v) {
-        return false;
-    }
-
-    @Override
-    public boolean remove(Object key) {
-        if (key == null) {
-            throw new IndexOutOfBoundsException("Неверный ключ");
+    public boolean remove(Object data) {
+        if (data == null) {
+            throw new IndexOutOfBoundsException("Null значения");
         }
 
         //noinspection unchecked
-        int hash = getHash((K) key);
+        int hash = getHash((T) data);
 
         if (table[hash] == null) {
-            throw new IndexOutOfBoundsException("Неверный ключ");
+            return false;
         }
 
-        if (table[hash].getKey().equals(key)) {
+        if (table[hash].getData().equals(data)) {
             table[hash] = table[hash].getNext();
-
             size--;
-            modCount--;
 
             return true;
         }
 
-        HashItem<K, V> temp = table[hash];
+        HashItem<T> temp = table[hash];
 
         while (temp.getNext() != null) {
-            if (key.equals(temp.getNext().getKey())) {
+            if (data.equals(temp.getNext().getData())) {
                 if (temp.getNext() != null) {
                     temp.setNext(temp.getNext().getNext());
                 }
-
                 size--;
-                modCount--;
 
                 return true;
             }
@@ -218,8 +183,15 @@ public class MyHashTable<K, V> implements Collection<V> {
     }
 
     @Override
-    public boolean addAll(Collection c) {
-        return false;
+    public boolean addAll(Collection collection) {
+        boolean isAddAll = false;
+        for (Object data : collection) {
+            //noinspection unchecked
+            add((T) data);
+            isAddAll = true;
+        }
+
+        return isAddAll;
     }
 
     @Override
@@ -232,12 +204,32 @@ public class MyHashTable<K, V> implements Collection<V> {
 
     @Override
     public boolean retainAll(Collection collection) {
-        return false;
+        boolean isRetainAll = false;
+
+        while (size >= collection.size()) {
+            for (Object data : this) {
+                if (!collection.contains(data)) {
+                    remove(data);
+                    isRetainAll = true;
+                }
+            }
+        }
+
+        return isRetainAll;
     }
 
     @Override
     public boolean removeAll(Collection collection) {
-        return false;
+        boolean isRemoveAll = false;
+
+        for (Object data : collection) {
+            if (collection.contains(data)) {
+                remove(data);
+                isRemoveAll = true;
+            }
+        }
+
+        return isRemoveAll;
     }
 
     @Override
@@ -253,17 +245,17 @@ public class MyHashTable<K, V> implements Collection<V> {
     @SuppressWarnings("unchecked")
     @Override
     public Object[] toArray(Object[] array) {
-        V[] arrayValues;
+        T[] arrayData;
 
         if (array.length < size) {
-            arrayValues = (V[]) new Object[size];
+            arrayData = (T[]) new Object[size];
         } else {
-            arrayValues = (V[]) new Object[array.length];
+            arrayData = (T[]) new Object[array.length];
         }
 
         int i = 0;
-        for (V v : this) {
-            arrayValues[i] = v;
+        for (T v : this) {
+            arrayData[i] = v;
             i++;
         }
 
@@ -271,6 +263,6 @@ public class MyHashTable<K, V> implements Collection<V> {
             array[size] = null;
         }
 
-        return arrayValues;
+        return arrayData;
     }
 }
