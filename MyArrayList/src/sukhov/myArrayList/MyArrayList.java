@@ -166,19 +166,21 @@ public class MyArrayList<T> implements List<T> {
         }
 
         boolean isAddAll = false;
+
         for (T data : collection) {
-            add(data);
+            items[size] = data;
+
+            size++;
+            modCount++;
             isAddAll = true;
         }
-
-        size += collection.size();
 
         return isAddAll;
     }
 
     @Override
     public boolean addAll(int index, Collection<? extends T> collection) {
-        if (index < 0 || index >= size) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Неверный индекс массива");
         }
 
@@ -186,13 +188,18 @@ public class MyArrayList<T> implements List<T> {
             ensureCapacity(size + collection.size() * 2);
         }
 
+        System.arraycopy(items, index, items, collection.size() + index, size - index);
         boolean isAddAll = false;
+
+        int i = index;
         for (T data : collection) {
-            add(index, data);
+            items[i] = data;
+
+            size++;
+            modCount++;
+            i++;
             isAddAll = true;
         }
-
-        size += collection.size();
 
         return isAddAll;
     }
@@ -250,9 +257,10 @@ public class MyArrayList<T> implements List<T> {
             throw new IndexOutOfBoundsException("Неверный индекс массива");
         }
 
+        T changedElement = items[index];
         items[index] = element;
 
-        return element;
+        return changedElement;
     }
 
     @Override
@@ -283,7 +291,6 @@ public class MyArrayList<T> implements List<T> {
 
         items[size - 1] = null;
         size--;
-        modCount--;
 
         return element;
     }

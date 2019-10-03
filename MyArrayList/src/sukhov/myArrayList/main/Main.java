@@ -30,7 +30,6 @@ public class Main {
         list3.add(1);
 
 
-
         list1.toArray(new Object[10]);
 
         System.out.println("list1: " + Arrays.toString(list1.toArray()));
@@ -70,7 +69,12 @@ public class Main {
 
         System.out.println("myList size: " + myList.size());
 
-        System.out.println("myList and list3 " + myList.containsAll(list3));
+        myList.add(7);
+        myList.add(5);
+        myList.add(12);
+
+        System.out.println("myList add list3 " + myList.addAll(3, list3));
+        System.out.println("myList: " + Arrays.toString(myList.toArray()));
 
         myList.ensureCapacity(50);
     }
