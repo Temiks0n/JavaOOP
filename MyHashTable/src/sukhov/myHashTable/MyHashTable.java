@@ -3,8 +3,9 @@ package sukhov.myHashTable;
 import java.util.*;
 
 public class MyHashTable<T> implements Collection<T> {
-    private HashItem<T>[] table;
+    private ArrayList<HashItem<T>> table;
     private int size;
+    private int length;
     private int modCount;
 
     private class HashTableIterator implements Iterator<T> {
@@ -31,9 +32,9 @@ public class MyHashTable<T> implements Collection<T> {
             currentIndex++;
 
             while (currentIndex < size) {
-                if (table[index] != null) {
+                if (table.get(index) != null) {
                     if (next == null) {
-                        next = table[index];
+                        next = table.get(index);
                     }
 
                     T data = next.getData();
@@ -53,8 +54,11 @@ public class MyHashTable<T> implements Collection<T> {
     }
 
     public MyHashTable() {
-        //noinspection unchecked
-        table = new HashItem[20];
+        table = new ArrayList<>(20);
+        length = 20;
+        for (int i = 0; i < length; i++) {
+            table.add(i, null);
+        }
     }
 
     public MyHashTable(int length) {
@@ -62,8 +66,13 @@ public class MyHashTable<T> implements Collection<T> {
             throw new IndexOutOfBoundsException("Длина таблицы не может быть меньше нуля");
         }
 
-        //noinspection unchecked
-        table = new HashItem[length];
+        table = new ArrayList<>(length);
+        this.length = length;
+
+        for (int i = 0; i < length; i++) {
+            table.add(i, null);
+        }
+
     }
 
     public int size() {
@@ -71,7 +80,7 @@ public class MyHashTable<T> implements Collection<T> {
     }
 
     private int getHash(T data) {
-        return Math.abs(data.hashCode() % table.length);
+        return Math.abs(data.hashCode() % length);
     }
 
     @Override
@@ -117,14 +126,15 @@ public class MyHashTable<T> implements Collection<T> {
         int hash = getHash(data);
         HashItem<T> hashItem = new HashItem<>(data, hash);
 
-        if (table[hash] == null) {
-            table[hash] = hashItem;
+        if (table.get(hash) == null) {
+            table.remove(hash);
+            table.add(hash, hashItem);
         } else {
-            if (table[hash].getData().equals(hashItem.getData())) {
+            if (table.get(hash).getData().equals(hashItem.getData())) {
                 return false;
             }
 
-            HashItem<T> temp = table[hash];
+            HashItem<T> temp = table.get(hash);
 
             while (temp.getNext() != null) {
                 if (hashItem.getData().equals(temp.getNext().getData())) {
@@ -154,18 +164,21 @@ public class MyHashTable<T> implements Collection<T> {
         //noinspection unchecked
         int hash = getHash((T) data);
 
-        if (table[hash] == null) {
+        if (table.get(hash) == null) {
             return false;
         }
 
-        if (table[hash].getData().equals(data)) {
-            table[hash] = table[hash].getNext();
+        if (table.get(hash).getData().equals(data)) {
+            HashItem<T> temp = table.get(hash).getNext();
+
+            table.remove(hash);
+            table.add(hash, temp);
             size--;
 
             return true;
         }
 
-        HashItem<T> temp = table[hash];
+        HashItem<T> temp = table.get(hash);
 
         while (temp.getNext() != null) {
             if (data.equals(temp.getNext().getData())) {
@@ -196,8 +209,7 @@ public class MyHashTable<T> implements Collection<T> {
 
     @Override
     public void clear() {
-        //noinspection unchecked
-        table = new HashItem[20];
+        table = new ArrayList<>();
         size = 0;
         modCount = 0;
     }
@@ -205,13 +217,14 @@ public class MyHashTable<T> implements Collection<T> {
     @Override
     public boolean retainAll(Collection collection) {
         boolean isRetainAll = false;
+        Iterator<T> iterator = iterator();
 
-        while (size >= collection.size()) {
-            for (Object data : this) {
-                if (!collection.contains(data)) {
-                    remove(data);
-                    isRetainAll = true;
-                }
+        while (iterator.hasNext()) {
+            T data = iterator.next();
+            if (!collection.contains(data)) {
+                remove(data);
+                iterator = iterator();
+                isRetainAll = true;
             }
         }
 
