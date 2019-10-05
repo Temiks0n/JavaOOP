@@ -3,7 +3,7 @@ package sukhov.myHashTable;
 import java.util.*;
 
 public class MyHashTable<T> implements Collection<T> {
-    private ArrayList<HashItem<T>> table;
+    private ArrayList<LinkedList<T>> table;
     private int size;
     private int length;
     private int modCount;
@@ -11,8 +11,8 @@ public class MyHashTable<T> implements Collection<T> {
     private class HashTableIterator implements Iterator<T> {
         private int currentIndex = -1;
         private int modCountIterator = modCount;
-        private int index;
-        HashItem<T> next;
+        private int arrayIndex;
+        private int linkIndex;
 
         @Override
         public boolean hasNext() {
@@ -32,21 +32,22 @@ public class MyHashTable<T> implements Collection<T> {
             currentIndex++;
 
             while (currentIndex < size) {
-                if (table.get(index) != null) {
-                    if (next == null) {
-                        next = table.get(index);
+                if (table.get(arrayIndex) != null) {
+                    if (linkIndex == table.get(arrayIndex).size()) {
+                        linkIndex = 0;
                     }
 
-                    T data = next.getData();
-                    next = next.getNext();
+                    T data = table.get(arrayIndex).get(linkIndex);
+                    linkIndex++;
 
-                    if (next == null) {
-                        index++;
+                    if (linkIndex == table.get(arrayIndex).size()) {
+                        linkIndex = 0;
+                        arrayIndex++;
                     }
 
                     return data;
                 }
-                index++;
+                arrayIndex++;
             }
 
             return null;
@@ -124,29 +125,20 @@ public class MyHashTable<T> implements Collection<T> {
         }
 
         int hash = getHash(data);
-        HashItem<T> hashItem = new HashItem<>(data, hash);
 
         if (table.get(hash) == null) {
+            LinkedList<T> linkedList = new LinkedList<>();
+            linkedList.add(data);
+
             table.remove(hash);
-            table.add(hash, hashItem);
+            table.add(hash, linkedList);
         } else {
-            if (table.get(hash).getData().equals(hashItem.getData())) {
-                return false;
-            }
-
-            HashItem<T> temp = table.get(hash);
-
-            while (temp.getNext() != null) {
-                if (hashItem.getData().equals(temp.getNext().getData())) {
-                    temp.setNext(hashItem);
-
-                    size++;
-                    modCount++;
-                    return true;
+            for (T d : table.get(hash)) {
+                if (d.equals(data)) {
+                    return false;
                 }
-                temp = temp.getNext();
             }
-            temp.setNext(hashItem);
+            table.get(hash).add(data);
         }
 
         size++;
@@ -168,28 +160,10 @@ public class MyHashTable<T> implements Collection<T> {
             return false;
         }
 
-        if (table.get(hash).getData().equals(data)) {
-            HashItem<T> temp = table.get(hash).getNext();
-
-            table.remove(hash);
-            table.add(hash, temp);
+        if (table.get(hash).remove(data)) {
             size--;
 
             return true;
-        }
-
-        HashItem<T> temp = table.get(hash);
-
-        while (temp.getNext() != null) {
-            if (data.equals(temp.getNext().getData())) {
-                if (temp.getNext() != null) {
-                    temp.setNext(temp.getNext().getNext());
-                }
-                size--;
-
-                return true;
-            }
-            temp = temp.getNext();
         }
 
         return false;
@@ -209,7 +183,7 @@ public class MyHashTable<T> implements Collection<T> {
 
     @Override
     public void clear() {
-        table = new ArrayList<>();
+        table = new ArrayList<>(20);
         size = 0;
         modCount = 0;
     }
@@ -217,14 +191,18 @@ public class MyHashTable<T> implements Collection<T> {
     @Override
     public boolean retainAll(Collection collection) {
         boolean isRetainAll = false;
-        Iterator<T> iterator = iterator();
+        boolean isChange = true;
 
-        while (iterator.hasNext()) {
-            T data = iterator.next();
-            if (!collection.contains(data)) {
-                remove(data);
-                iterator = iterator();
-                isRetainAll = true;
+        while (isChange) {
+            Iterator<T> iterator = iterator();
+            isChange = false;
+            while (iterator.hasNext()) {
+                T data = iterator.next();
+                if (!collection.contains(data)) {
+                    remove(data);
+                    isRetainAll = true;
+                    isChange = true;
+                }
             }
         }
 
