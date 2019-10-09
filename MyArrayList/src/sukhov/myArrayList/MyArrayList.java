@@ -40,8 +40,11 @@ public class MyArrayList<T> implements List<T> {
             }
 
             System.arraycopy(items, currentIndex + 1, items, currentIndex, size - currentIndex - 1);
+
             currentIndex--;
             size--;
+            modCountIterator++;
+            modCount++;
         }
     }
 
@@ -170,10 +173,10 @@ public class MyArrayList<T> implements List<T> {
         for (T data : collection) {
             items[size] = data;
 
-            size++;
-            modCount++;
             isAddAll = true;
         }
+        size += collection.size();
+        modCount += collection.size();
 
         return isAddAll;
     }
@@ -194,12 +197,12 @@ public class MyArrayList<T> implements List<T> {
         int i = index;
         for (T data : collection) {
             items[i] = data;
-
-            size++;
-            modCount++;
             i++;
+
             isAddAll = true;
         }
+        size += collection.size();
+        modCount++;
 
         return isAddAll;
     }
@@ -239,7 +242,7 @@ public class MyArrayList<T> implements List<T> {
         //noinspection unchecked
         items = (T[]) new Object[10];
         size = 0;
-        modCount = 0;
+        modCount++;
     }
 
     @Override
@@ -291,6 +294,7 @@ public class MyArrayList<T> implements List<T> {
 
         items[size - 1] = null;
         size--;
+        modCount++;
 
         return element;
     }
