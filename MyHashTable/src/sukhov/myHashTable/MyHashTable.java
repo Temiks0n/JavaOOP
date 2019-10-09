@@ -3,9 +3,8 @@ package sukhov.myHashTable;
 import java.util.*;
 
 public class MyHashTable<T> implements Collection<T> {
-    private ArrayList<List<T>> table;
+    private List<T>[] table;
     private int size;
-    private int length;
     private int modCount;
 
     private class HashTableIterator implements Iterator<T> {
@@ -13,6 +12,7 @@ public class MyHashTable<T> implements Collection<T> {
         private int modCountIterator = modCount;
         private int arrayIndex;
         private int linkIndex;
+        private T data;
 
         @Override
         public boolean hasNext() {
@@ -32,15 +32,15 @@ public class MyHashTable<T> implements Collection<T> {
             currentIndex++;
 
             while (currentIndex < size) {
-                if (table.get(arrayIndex) != null) {
-                    if (linkIndex == table.get(arrayIndex).size()) {
+                if (table[arrayIndex] != null) {
+                    if (linkIndex == table[arrayIndex].size()) {
                         linkIndex = 0;
                     }
 
-                    T data = table.get(arrayIndex).get(linkIndex);
+                    data = table[arrayIndex].get(linkIndex);
                     linkIndex++;
 
-                    if (linkIndex == table.get(arrayIndex).size()) {
+                    if (linkIndex == table[arrayIndex].size()) {
                         linkIndex = 0;
                         arrayIndex++;
                     }
@@ -52,14 +52,21 @@ public class MyHashTable<T> implements Collection<T> {
 
             return null;
         }
+
+        @Override
+        public void remove() {
+            if (modCountIterator != modCount) {
+                throw new ConcurrentModificationException("Были изменения");
+            }
+
+            MyHashTable.this.remove(data);
+            modCountIterator++;
+        }
     }
 
     public MyHashTable() {
-        table = new ArrayList<>(20);
-        length = 20;
-        for (int i = 0; i < length; i++) {
-            table.add(i, null);
-        }
+        //noinspection unchecked
+        table = new List[20];
     }
 
     public MyHashTable(int length) {
@@ -67,13 +74,8 @@ public class MyHashTable<T> implements Collection<T> {
             throw new IndexOutOfBoundsException("Длина таблицы не может быть меньше нуля");
         }
 
-        table = new ArrayList<>(length);
-        this.length = length;
-
-        for (int i = 0; i < length; i++) {
-            table.add(i, null);
-        }
-
+        //noinspection unchecked
+        table = new List[length];
     }
 
     public int size() {
@@ -81,7 +83,7 @@ public class MyHashTable<T> implements Collection<T> {
     }
 
     private int getHash(T data) {
-        return Math.abs(data.hashCode() % length);
+        return Math.abs(data.hashCode() % table.length);
     }
 
     @Override
@@ -126,19 +128,18 @@ public class MyHashTable<T> implements Collection<T> {
 
         int hash = getHash(data);
 
-        if (table.get(hash) == null) {
+        if (table[hash] == null) {
             List<T> list = new LinkedList<>();
             list.add(data);
 
-            table.remove(hash);
-            table.add(hash, list);
+            table[hash] = list;
         } else {
-            for (T d : table.get(hash)) {
+            for (T d : table[hash]) {
                 if (d.equals(data)) {
                     return false;
                 }
             }
-            table.get(hash).add(data);
+            table[hash].add(data);
         }
 
         size++;
@@ -156,12 +157,13 @@ public class MyHashTable<T> implements Collection<T> {
         //noinspection unchecked
         int hash = getHash((T) data);
 
-        if (table.get(hash) == null) {
+        if (table[hash] == null) {
             return false;
         }
 
-        if (table.get(hash).remove(data)) {
+        if (table[hash].remove(data)) {
             size--;
+            modCount++;
 
             return true;
         }
@@ -183,9 +185,10 @@ public class MyHashTable<T> implements Collection<T> {
 
     @Override
     public void clear() {
-        table = new ArrayList<>(20);
+        //noinspection unchecked
+        table = new List[20];
         size = 0;
-        modCount = 0;
+        modCount++;
     }
 
     @Override
@@ -199,7 +202,7 @@ public class MyHashTable<T> implements Collection<T> {
             while (iterator.hasNext()) {
                 T data = iterator.next();
                 if (!collection.contains(data)) {
-                    remove(data);
+                    iterator.remove();
                     isRetainAll = true;
                     isChange = true;
                 }
