@@ -3,7 +3,7 @@ package sukhov.myHashTable;
 import java.util.*;
 
 public class MyHashTable<T> implements Collection<T> {
-    private ArrayList<LinkedList<T>> table;
+    private ArrayList<List<T>> table;
     private int size;
     private int length;
     private int modCount;
@@ -127,11 +127,11 @@ public class MyHashTable<T> implements Collection<T> {
         int hash = getHash(data);
 
         if (table.get(hash) == null) {
-            LinkedList<T> linkedList = new LinkedList<>();
-            linkedList.add(data);
+            List<T> list = new LinkedList<>();
+            list.add(data);
 
             table.remove(hash);
-            table.add(hash, linkedList);
+            table.add(hash, list);
         } else {
             for (T d : table.get(hash)) {
                 if (d.equals(data)) {
