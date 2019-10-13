@@ -32,7 +32,7 @@ public class MyHashTable<T> implements Collection<T> {
             currentIndex++;
 
             while (currentIndex < size) {
-                if (table[arrayIndex] != null) {
+                if (!Objects.equals(table[arrayIndex], null)) {
                     if (linkIndex == table[arrayIndex].size()) {
                         linkIndex = 0;
                     }
@@ -70,8 +70,8 @@ public class MyHashTable<T> implements Collection<T> {
     }
 
     public MyHashTable(int length) {
-        if (length < 0) {
-            throw new IndexOutOfBoundsException("Длина таблицы не может быть меньше нуля");
+        if (length <= 0) {
+            throw new ArrayIndexOutOfBoundsException("Длина таблицы должна быть больше нуля");
         }
 
         //noinspection unchecked
@@ -82,7 +82,11 @@ public class MyHashTable<T> implements Collection<T> {
         return size;
     }
 
-    private int getHash(T data) {
+    private int getHash(Object data) {
+        if (Objects.equals(data, null)) {
+            return 0;
+        }
+
         return Math.abs(data.hashCode() % table.length);
     }
 
@@ -93,9 +97,11 @@ public class MyHashTable<T> implements Collection<T> {
 
     @Override
     public boolean contains(Object data) {
-        for (T d : this) {
-            if (d == data) {
-                return true;
+        if (table[getHash(data)] != null) {
+            for (T d : table[getHash(data)]) {
+                if (Objects.equals(d, data)) {
+                    return true;
+                }
             }
         }
 
@@ -122,10 +128,6 @@ public class MyHashTable<T> implements Collection<T> {
 
     @Override
     public boolean add(T data) {
-        if (data == null) {
-            throw new IndexOutOfBoundsException("Null значения");
-        }
-
         int hash = getHash(data);
 
         if (table[hash] == null) {
@@ -134,11 +136,6 @@ public class MyHashTable<T> implements Collection<T> {
 
             table[hash] = list;
         } else {
-            for (T d : table[hash]) {
-                if (d.equals(data)) {
-                    return false;
-                }
-            }
             table[hash].add(data);
         }
 
@@ -150,12 +147,7 @@ public class MyHashTable<T> implements Collection<T> {
 
     @Override
     public boolean remove(Object data) {
-        if (data == null) {
-            throw new IndexOutOfBoundsException("Null значения");
-        }
-
-        //noinspection unchecked
-        int hash = getHash((T) data);
+        int hash = getHash(data);
 
         if (table[hash] == null) {
             return false;
@@ -215,11 +207,18 @@ public class MyHashTable<T> implements Collection<T> {
     @Override
     public boolean removeAll(Collection collection) {
         boolean isRemoveAll = false;
+        boolean isChange = true;
 
-        for (Object data : collection) {
-            if (collection.contains(data)) {
-                remove(data);
-                isRemoveAll = true;
+        while (isChange) {
+            Iterator<T> iterator = iterator();
+            isChange = false;
+            while (iterator.hasNext()) {
+                T data = iterator.next();
+                if (collection.contains(data)) {
+                    iterator.remove();
+                    isRemoveAll = true;
+                    isChange = true;
+                }
             }
         }
 
@@ -233,23 +232,22 @@ public class MyHashTable<T> implements Collection<T> {
                 return false;
             }
         }
+
         return true;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public Object[] toArray(Object[] array) {
-        T[] arrayData;
-
+    public T[] toArray(Object[] array) {
         if (array.length < size) {
-            arrayData = (T[]) new Object[size];
+            array = Arrays.copyOf(array, size, array.getClass());
         } else {
-            arrayData = (T[]) new Object[array.length];
+            array = Arrays.copyOf(array, array.length, array.getClass());
         }
 
         int i = 0;
         for (T v : this) {
-            arrayData[i] = v;
+            array[i] = v;
             i++;
         }
 
@@ -257,6 +255,6 @@ public class MyHashTable<T> implements Collection<T> {
             array[size] = null;
         }
 
-        return arrayData;
+        return (T[]) array;
     }
 }

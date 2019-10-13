@@ -8,6 +8,9 @@ public class Main {
     public static void main(String[] args) {
         MyHashTable<Integer> myHash = new MyHashTable<>(3);
 
+        myHash.add(null);
+        myHash.add(5);
+        myHash.add(5);
         myHash.add(5);
         myHash.add(5);
         myHash.add(8);
@@ -16,6 +19,7 @@ public class Main {
         myHash.add(16);
         myHash.add(18);
         myHash.add(19);
+        myHash.add(null);
         myHash.add(22);
         myHash.add(82);
         myHash.add(38);
@@ -35,9 +39,12 @@ public class Main {
         myHashTable2.add(555);
         myHashTable2.add(5555);
 
-        System.out.println("myHash removeAll: " + myHash.retainAll(myHashTable1));
+        Integer[] integers = myHash.toArray(new Integer[11]);
+
+        System.out.println("myHash removeAll: " + myHash.removeAll(myHashTable1));
         System.out.println("myHash addAll: " + myHash.addAll(myHashTable2));
-        System.out.println("myHash contains 3: " + myHash.contains(3));
+        System.out.println("myHash contains 3: " + myHash.contains(null));
         System.out.println("myHash values: " + Arrays.toString(myHash.toArray()));
+
     }
 }
