@@ -202,7 +202,7 @@ public class MyArrayList<T> implements List<T> {
             isAddAll = true;
         }
         size += collection.size();
-        modCount++;
+        modCount = isAddAll ? modCount++ : modCount;
 
         return isAddAll;
     }
