@@ -1,4 +1,4 @@
-package sukhov.temperature;
+package sukhov.temperatures;
 
 public interface Scale {
 

@@ -1,6 +1,6 @@
-package sukhov.temperature.gui;
+package sukhov.temperatures.gui;
 
-import sukhov.temperature.Converter;
+import sukhov.temperatures.Converter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +32,7 @@ public class Window {
     }
 
     private void createFrame() {
-        frame = new JFrame("Temperature");
+        frame = new JFrame("Temperatures");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(400, 130);
         frame.setLocationRelativeTo(null);
@@ -101,7 +101,7 @@ public class Window {
                     Double.parseDouble(textField1.getText());
                     textField1.setToolTipText("");
                 } catch (NumberFormatException n) {
-                    textField1.setToolTipText("Неверные значенмя");
+                    textField1.setToolTipText("Неверные значения");
                 }
             }
         });

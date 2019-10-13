@@ -1,9 +1,9 @@
-package sukhov.temperature;
+package sukhov.temperatures;
 
-public class Fahrenheit implements Scale {
+public class Kelvin implements Scale {
     private double degrees;
 
-    Fahrenheit(double degree) {
+    Kelvin(double degree) {
         this.degrees = degree;
     }
 
@@ -14,21 +14,21 @@ public class Fahrenheit implements Scale {
 
     @Override
     public double getCelsius() {
-        return (degrees - 32) * 5 / 9;
+        return degrees - 273.15;
     }
 
     @Override
     public double getFahrenheit() {
-        return degrees;
+        return degrees * 5 / 9 - 459.67;
     }
 
     @Override
     public double getKelvin() {
-        return (degrees + 459.67) * 5 / 9;
+        return degrees;
     }
 
     @Override
     public double getReaumer() {
-        return (degrees - 32) * 5 / 9;
+        return (degrees - 273.15) * 4 / 5;
     }
 }

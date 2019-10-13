@@ -1,6 +1,6 @@
-package sukhov.temperature;
+package sukhov.temperatures;
 
-import sukhov.temperature.gui.ScalesBox;
+import sukhov.temperatures.gui.ScalesBox;
 
 public class Converter {
     private Scale scale;

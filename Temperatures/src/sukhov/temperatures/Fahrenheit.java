@@ -1,9 +1,9 @@
-package sukhov.temperature;
+package sukhov.temperatures;
 
-public class Reaumer implements Scale {
+public class Fahrenheit implements Scale {
     private double degrees;
 
-    Reaumer(double degree) {
+    Fahrenheit(double degree) {
         this.degrees = degree;
     }
 
@@ -14,21 +14,21 @@ public class Reaumer implements Scale {
 
     @Override
     public double getCelsius() {
-        return degrees * 5 / 4;
+        return (degrees - 32) * 5 / 9;
     }
 
     @Override
     public double getFahrenheit() {
-        return degrees * 9 / 4 + 32;
+        return degrees;
     }
 
     @Override
     public double getKelvin() {
-        return degrees * 5 / 4 + 273.15;
+        return (degrees + 459.67) * 5 / 9;
     }
 
     @Override
     public double getReaumer() {
-        return degrees;
+        return (degrees - 32) * 5 / 9;
     }
 }

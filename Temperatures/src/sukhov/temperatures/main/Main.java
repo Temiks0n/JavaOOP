@@ -1,6 +1,6 @@
-package sukhov.temperature.main;
+package sukhov.temperatures.main;
 
-import sukhov.temperature.gui.Window;
+import sukhov.temperatures.gui.Window;
 
 import javax.swing.*;
 
