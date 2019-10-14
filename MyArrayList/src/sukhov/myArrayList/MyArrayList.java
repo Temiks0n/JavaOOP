@@ -176,7 +176,7 @@ public class MyArrayList<T> implements List<T> {
             isAddAll = true;
         }
         size += collection.size();
-        modCount += collection.size();
+        modCount = isAddAll ? modCount + 1 : modCount;
 
         return isAddAll;
     }
@@ -202,7 +202,7 @@ public class MyArrayList<T> implements List<T> {
             isAddAll = true;
         }
         size += collection.size();
-        modCount = isAddAll ? modCount++ : modCount;
+        modCount = isAddAll ? modCount + 1 : modCount;
 
         return isAddAll;
     }
