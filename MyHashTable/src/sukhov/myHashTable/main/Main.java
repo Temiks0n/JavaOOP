@@ -39,12 +39,11 @@ public class Main {
         myHashTable2.add(555);
         myHashTable2.add(5555);
 
-        Integer[] integers = myHash.toArray(new Integer[11]);
+        Integer[] integers = myHash.toArray(new Integer[16]);
 
         System.out.println("myHash removeAll: " + myHash.removeAll(myHashTable1));
         System.out.println("myHash addAll: " + myHash.addAll(myHashTable2));
         System.out.println("myHash contains 3: " + myHash.contains(null));
         System.out.println("myHash values: " + Arrays.toString(myHash.toArray()));
-
     }
 }

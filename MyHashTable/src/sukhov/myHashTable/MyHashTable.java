@@ -32,7 +32,7 @@ public class MyHashTable<T> implements Collection<T> {
             currentIndex++;
 
             while (currentIndex < size) {
-                if (!Objects.equals(table[arrayIndex], null)) {
+                if (table[arrayIndex] != null) {
                     if (linkIndex == table[arrayIndex].size()) {
                         linkIndex = 0;
                     }
@@ -60,7 +60,7 @@ public class MyHashTable<T> implements Collection<T> {
             }
 
             MyHashTable.this.remove(data);
-            modCountIterator++;
+            modCountIterator = modCount;
         }
     }
 
@@ -71,7 +71,7 @@ public class MyHashTable<T> implements Collection<T> {
 
     public MyHashTable(int length) {
         if (length <= 0) {
-            throw new ArrayIndexOutOfBoundsException("Длина таблицы должна быть больше нуля");
+            throw new IllegalArgumentException("Длина таблицы должна быть больше нуля");
         }
 
         //noinspection unchecked
@@ -83,7 +83,7 @@ public class MyHashTable<T> implements Collection<T> {
     }
 
     private int getHash(Object data) {
-        if (Objects.equals(data, null)) {
+        if (data == null) {
             return 0;
         }
 
@@ -97,15 +97,13 @@ public class MyHashTable<T> implements Collection<T> {
 
     @Override
     public boolean contains(Object data) {
-        if (table[getHash(data)] != null) {
-            for (T d : table[getHash(data)]) {
-                if (Objects.equals(d, data)) {
-                    return true;
-                }
-            }
+        int index = getHash(data);
+
+        if (table[index] == null) {
+            return false;
         }
 
-        return false;
+        return table[index].contains(data);
     }
 
     @Override
@@ -130,13 +128,13 @@ public class MyHashTable<T> implements Collection<T> {
     public boolean add(T data) {
         int hash = getHash(data);
 
-        if (table[hash] == null) {
+        if (table[hash] != null) {
+            table[hash].add(data);
+        } else {
             List<T> list = new LinkedList<>();
             list.add(data);
 
             table[hash] = list;
-        } else {
-            table[hash].add(data);
         }
 
         size++;
@@ -164,11 +162,10 @@ public class MyHashTable<T> implements Collection<T> {
     }
 
     @Override
-    public boolean addAll(Collection collection) {
+    public boolean addAll(Collection<? extends T> collection) {
         boolean isAddAll = false;
-        for (Object data : collection) {
-            //noinspection unchecked
-            add((T) data);
+        for (T data : collection) {
+            add(data);
             isAddAll = true;
         }
 
@@ -184,7 +181,7 @@ public class MyHashTable<T> implements Collection<T> {
     }
 
     @Override
-    public boolean retainAll(Collection collection) {
+    public boolean retainAll(Collection<?> collection) {
         boolean isRetainAll = false;
         boolean isChange = true;
 
@@ -205,7 +202,7 @@ public class MyHashTable<T> implements Collection<T> {
     }
 
     @Override
-    public boolean removeAll(Collection collection) {
+    public boolean removeAll(Collection<?> collection) {
         boolean isRemoveAll = false;
         boolean isChange = true;
 
@@ -226,7 +223,7 @@ public class MyHashTable<T> implements Collection<T> {
     }
 
     @Override
-    public boolean containsAll(Collection collection) {
+    public boolean containsAll(Collection<?> collection) {
         for (Object data : collection) {
             if (!contains(data)) {
                 return false;
@@ -239,10 +236,12 @@ public class MyHashTable<T> implements Collection<T> {
     @SuppressWarnings("unchecked")
     @Override
     public T[] toArray(Object[] array) {
-        if (array.length < size) {
-            array = Arrays.copyOf(array, size, array.getClass());
-        } else {
-            array = Arrays.copyOf(array, array.length, array.getClass());
+        if (array.length != size) {
+            if (array.length < size) {
+                array = Arrays.copyOf(array, size, array.getClass());
+            } else {
+                array = Arrays.copyOf(array, array.length, array.getClass());
+            }
         }
 
         int i = 0;
