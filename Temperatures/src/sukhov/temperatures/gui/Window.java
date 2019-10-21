@@ -8,7 +8,6 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-
 public class Window {
     private JFrame window;
     private JPanel panelScales;
@@ -26,7 +25,7 @@ public class Window {
 
         createListScalesInput();
         createListScalesOutput();
-        createPanel();
+        createPanelScales();
 
         SwingUtilities.invokeLater(this::createWindow);
     }
@@ -46,14 +45,14 @@ public class Window {
         window.add(convert);
     }
 
-    private void createPanel() {
+    private void createPanelScales() {
         panelScales = new JPanel();
 
         panelScales.add(listScalesInput);
         panelScales.add(listScalesOutput);
     }
 
-    private JComboBox comboBox() {
+    private JComboBox getScales() {
         JComboBox<String> comboBox = new JComboBox<>();
 
         comboBox.addItem("Цельсия");
@@ -64,7 +63,7 @@ public class Window {
         return comboBox;
     }
 
-    private Scale selectComboBox(int selectedIndex) {
+    private Scale selectScale(int selectedIndex) {
         Scale scale = null;
 
         switch (selectedIndex) {
@@ -86,11 +85,11 @@ public class Window {
     }
 
     private void createListScalesInput() {
-        listScalesInput = comboBox();
+        listScalesInput = getScales();
     }
 
     private void createListScalesOutput() {
-        listScalesOutput = comboBox();
+        listScalesOutput = getScales();
     }
 
     private void textInput() {
@@ -120,8 +119,8 @@ public class Window {
 
         convert.addActionListener(e -> {
             try {
-                converter.input(Double.parseDouble(input.getText()), selectComboBox(listScalesInput.getSelectedIndex()));
-                output.setText(Double.toString(converter.output(selectComboBox(listScalesOutput.getSelectedIndex()))));
+                converter.input(Double.parseDouble(input.getText()), selectScale(listScalesInput.getSelectedIndex()));
+                output.setText(Double.toString(converter.output(selectScale(listScalesOutput.getSelectedIndex()))));
             } catch (NumberFormatException ignored) {
             }
         });
