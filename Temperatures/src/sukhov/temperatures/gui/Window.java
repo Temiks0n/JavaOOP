@@ -1,6 +1,7 @@
 package sukhov.temperatures.gui;
 
 import sukhov.temperatures.Converter;
+import sukhov.temperatures.scales.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,48 +10,47 @@ import java.awt.event.KeyEvent;
 
 
 public class Window {
-    private JFrame frame;
-    private JPanel panel1;
-    private JComboBox comboBox1;
-    private JComboBox comboBox2;
-    private JTextField textField1;
-    private JTextField textField2;
-    private JButton button;
+    private JFrame window;
+    private JPanel panelScales;
+    private JComboBox listScalesInput;
+    private JComboBox listScalesOutput;
+    private JTextField input;
+    private JTextField output;
+    private JButton convert;
     private Converter converter;
-    private ScalesBox box;
 
     public Window() {
         textInput();
         textOutput();
         convert();
 
-        createComboBox1();
-        createComboBox2();
-
+        createListScalesInput();
+        createListScalesOutput();
         createPanel();
-        createFrame();
+
+        SwingUtilities.invokeLater(this::createWindow);
     }
 
-    private void createFrame() {
-        frame = new JFrame("Temperatures");
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setSize(400, 130);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-        frame.setResizable(false);
-        frame.setLayout(new FlowLayout());
+    private void createWindow() {
+        window = new JFrame("Temperatures");
+        window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        window.setSize(400, 130);
+        window.setLocationRelativeTo(null);
+        window.setVisible(true);
+        window.setResizable(false);
+        window.setLayout(new FlowLayout());
 
-        frame.add(panel1);
-        frame.add(textField1);
-        frame.add(textField2);
-        frame.add(button);
+        window.add(panelScales);
+        window.add(input);
+        window.add(output);
+        window.add(convert);
     }
 
     private void createPanel() {
-        panel1 = new JPanel();
+        panelScales = new JPanel();
 
-        panel1.add(comboBox1);
-        panel1.add(comboBox2);
+        panelScales.add(listScalesInput);
+        panelScales.add(listScalesOutput);
     }
 
     private JComboBox comboBox() {
@@ -64,63 +64,64 @@ public class Window {
         return comboBox;
     }
 
-    private ScalesBox selectComboBox(int selectedIndex) {
+    private Scale selectComboBox(int selectedIndex) {
+        Scale scale = null;
+
         switch (selectedIndex) {
             case 0:
-                box = ScalesBox.CELSIUS;
+                scale = new CelsiusScale();
                 break;
             case 1:
-                box = ScalesBox.FAHRENHEIT;
+                scale = new FahrenheitScale();
                 break;
             case 2:
-                box = ScalesBox.KELVIN;
+                scale = new KelvinScale();
                 break;
             case 3:
-                box = ScalesBox.REAUMUR;
+                scale = new ReaumerScale();
                 break;
         }
 
-        return box;
+        return scale;
     }
 
-    private void createComboBox1() {
-        comboBox1 = comboBox();
+    private void createListScalesInput() {
+        listScalesInput = comboBox();
     }
 
-    private void createComboBox2() {
-        comboBox2 = comboBox();
+    private void createListScalesOutput() {
+        listScalesOutput = comboBox();
     }
 
     private void textInput() {
-        textField1 = new JTextField(13);
-        textField1.setToolTipText("Введите значение");
+        input = new JTextField(13);
+        input.setToolTipText("Введите значение");
 
-        textField1.addKeyListener(new KeyAdapter() {
+        input.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
                 try {
-                    Double.parseDouble(textField1.getText());
-                    textField1.setToolTipText("");
+                    Double.parseDouble(input.getText());
+                    input.setToolTipText("");
                 } catch (NumberFormatException n) {
-                    textField1.setToolTipText("Неверные значения");
+                    input.setToolTipText("Неверные значения");
                 }
             }
         });
     }
 
     private void textOutput() {
-        textField2 = new JTextField(13);
-        textField2.setEditable(false);
+        output = new JTextField(13);
+        output.setEditable(false);
     }
 
     private void convert() {
-        button = new JButton("Конвертировать");
+        convert = new JButton("Конвертировать");
         converter = new Converter();
 
-        button.addActionListener(e -> {
+        convert.addActionListener(e -> {
             try {
-                converter.input(Double.parseDouble(textField1.getText()), selectComboBox(comboBox1.getSelectedIndex()));
-                textField2.setText(Double.toString(converter.output(selectComboBox(comboBox2.getSelectedIndex()))));
-
+                converter.input(Double.parseDouble(input.getText()), selectComboBox(listScalesInput.getSelectedIndex()));
+                output.setText(Double.toString(converter.output(selectComboBox(listScalesOutput.getSelectedIndex()))));
             } catch (NumberFormatException ignored) {
             }
         });
