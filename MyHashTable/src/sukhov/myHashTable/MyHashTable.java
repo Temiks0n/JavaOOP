@@ -13,6 +13,7 @@ public class MyHashTable<T> implements Collection<T> {
         private int arrayIndex;
         private int linkIndex;
         private T data;
+        private boolean isChange = false;
 
         @Override
         public boolean hasNext() {
@@ -29,10 +30,11 @@ public class MyHashTable<T> implements Collection<T> {
                 throw new NoSuchElementException("Метод hasNext не использовался");
             }
 
+            isChange = false;
             currentIndex++;
 
             while (currentIndex < size) {
-                if (table[arrayIndex] != null) {
+                if (table[arrayIndex] != null && table[arrayIndex].size() != 0) {
                     if (linkIndex == table[arrayIndex].size()) {
                         linkIndex = 0;
                     }
@@ -59,8 +61,13 @@ public class MyHashTable<T> implements Collection<T> {
                 throw new ConcurrentModificationException("Были изменения");
             }
 
+            if (isChange && hasNext()) {
+                next();
+            }
+
             MyHashTable.this.remove(data);
             modCountIterator = modCount;
+            isChange = true;
         }
     }
 
@@ -113,8 +120,7 @@ public class MyHashTable<T> implements Collection<T> {
 
     @Override
     public Object[] toArray() {
-        //noinspection unchecked
-        T[] arrayData = (T[]) new Object[size];
+        Object[] arrayData = new Object[size];
         int i = 0;
         for (T data : this) {
             arrayData[i] = data;
@@ -180,9 +186,8 @@ public class MyHashTable<T> implements Collection<T> {
         modCount++;
     }
 
-    @Override
-    public boolean retainAll(Collection<?> collection) {
-        boolean isRetainAll = false;
+    private boolean removeCollection(Collection<?> collection, boolean removeAll) {
+        boolean removeCollection = false;
         boolean isChange = true;
 
         while (isChange) {
@@ -190,36 +195,25 @@ public class MyHashTable<T> implements Collection<T> {
             isChange = false;
             while (iterator.hasNext()) {
                 T data = iterator.next();
-                if (!collection.contains(data)) {
+                if (collection.contains(data) == removeAll) {
                     iterator.remove();
-                    isRetainAll = true;
+                    removeCollection = true;
                     isChange = true;
                 }
             }
         }
 
-        return isRetainAll;
+        return removeCollection;
+    }
+
+    @Override
+    public boolean retainAll(Collection<?> collection) {
+        return removeCollection(collection, false);
     }
 
     @Override
     public boolean removeAll(Collection<?> collection) {
-        boolean isRemoveAll = false;
-        boolean isChange = true;
-
-        while (isChange) {
-            Iterator<T> iterator = iterator();
-            isChange = false;
-            while (iterator.hasNext()) {
-                T data = iterator.next();
-                if (collection.contains(data)) {
-                    iterator.remove();
-                    isRemoveAll = true;
-                    isChange = true;
-                }
-            }
-        }
-
-        return isRemoveAll;
+        return removeCollection(collection, true);
     }
 
     @Override
@@ -236,24 +230,24 @@ public class MyHashTable<T> implements Collection<T> {
     @SuppressWarnings("unchecked")
     @Override
     public T[] toArray(Object[] array) {
-        if (array.length != size) {
-            if (array.length < size) {
-                array = Arrays.copyOf(array, size, array.getClass());
-            } else {
-                array = Arrays.copyOf(array, array.length, array.getClass());
-            }
+        T[] arrayData;
+
+        if (array.length <= size) {
+            arrayData = (T[]) array;
+        } else {
+            arrayData = (T[]) new Object[array.length];
         }
 
         int i = 0;
         for (T v : this) {
-            array[i] = v;
+            arrayData[i] = v;
             i++;
         }
 
-        if (array.length > size) {
-            array[size] = null;
+        if (arrayData.length > size) {
+            arrayData[size] = null;
         }
 
-        return (T[]) array;
+        return arrayData;
     }
 }
