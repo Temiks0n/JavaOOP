@@ -1,11 +1,11 @@
 package sukhov.temperatures.scales;
 
-import sukhov.temperatures.ScalesBox;
+import sukhov.temperatures.ScalesName;
 
 public interface Scale {
     void setDegrees(double degrees);
 
-    ScalesBox getScalesBox();
+    ScalesName getScalesName();
 
-    double calculation(Scale scale);
+    double getCalculation(Scale scale);
 }

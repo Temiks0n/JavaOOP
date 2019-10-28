@@ -119,8 +119,8 @@ public class Window {
 
         convert.addActionListener(e -> {
             try {
-                converter.input(Double.parseDouble(input.getText()), selectScale(listScalesInput.getSelectedIndex()));
-                output.setText(Double.toString(converter.output(selectScale(listScalesOutput.getSelectedIndex()))));
+                converter.getInput(Double.parseDouble(input.getText()), selectScale(listScalesInput.getSelectedIndex()));
+                output.setText(Double.toString(converter.getOutput(selectScale(listScalesOutput.getSelectedIndex()))));
             } catch (NumberFormatException ignored) {
             }
         });

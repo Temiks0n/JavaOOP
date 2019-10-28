@@ -1,10 +1,10 @@
 package sukhov.temperatures.scales;
 
-import sukhov.temperatures.ScalesBox;
+import sukhov.temperatures.ScalesName;
 
 public class CelsiusScale implements Scale {
     private double degrees;
-    private ScalesBox scalesBox = ScalesBox.CELSIUS;
+    private ScalesName scalesName = ScalesName.CELSIUS;
 
     public CelsiusScale() {
     }
@@ -14,8 +14,8 @@ public class CelsiusScale implements Scale {
     }
 
     @Override
-    public ScalesBox getScalesBox() {
-        return scalesBox;
+    public ScalesName getScalesName() {
+        return scalesName;
     }
 
     @Override
@@ -24,17 +24,9 @@ public class CelsiusScale implements Scale {
     }
 
     @Override
-    public double calculation(Scale scale) {
-        if (scale.getScalesBox() == scalesBox) {
-            return degrees;
-        } else if (scale.getScalesBox() == ScalesBox.FAHRENHEIT) {
-            return 9 * degrees / 5 + 32;
-        } else if (scale.getScalesBox() == ScalesBox.KELVIN) {
-            return degrees + 273.15;
-        } else if (scale.getScalesBox() == ScalesBox.REAUMUR) {
-            return degrees * 4 / 5;
-        }
+    public double getCalculation(Scale scale) {
+        CalculatorScale calculation = new CalculatorScale(degrees, scalesName, scale);
 
-        return 0;
+        return calculation.getCalculation();
     }
 }

@@ -1,5 +1,5 @@
 package sukhov.temperatures;
 
-public enum ScalesBox {
+public enum ScalesName {
     CELSIUS, FAHRENHEIT, KELVIN, REAUMUR
 }

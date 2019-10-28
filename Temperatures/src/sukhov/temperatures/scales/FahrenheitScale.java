@@ -1,10 +1,10 @@
 package sukhov.temperatures.scales;
 
-import sukhov.temperatures.ScalesBox;
+import sukhov.temperatures.ScalesName;
 
 public class FahrenheitScale implements Scale {
     private double degrees;
-    private final ScalesBox scalesBox = ScalesBox.FAHRENHEIT;
+    private final ScalesName scalesName = ScalesName.FAHRENHEIT;
 
     public FahrenheitScale() {
     }
@@ -19,22 +19,14 @@ public class FahrenheitScale implements Scale {
     }
 
     @Override
-    public ScalesBox getScalesBox() {
-        return scalesBox;
+    public ScalesName getScalesName() {
+        return scalesName;
     }
 
     @Override
-    public double calculation(Scale scale) {
-        if (scale.getScalesBox() == scalesBox) {
-            return degrees;
-        } else if (scale.getScalesBox() == ScalesBox.CELSIUS) {
-            return (degrees - 32) * 5 / 9;
-        } else if (scale.getScalesBox() == ScalesBox.KELVIN) {
-            return (degrees + 459.67) * 5 / 9;
-        } else if (scale.getScalesBox() == ScalesBox.REAUMUR) {
-            return (degrees - 32) * 4 / 9;
-        }
+    public double getCalculation(Scale scale) {
+        CalculatorScale calculation = new CalculatorScale(degrees, scalesName, scale);
 
-        return 0;
+        return calculation.getCalculation();
     }
 }

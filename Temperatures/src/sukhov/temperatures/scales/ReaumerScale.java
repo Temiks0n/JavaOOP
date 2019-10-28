@@ -1,10 +1,10 @@
 package sukhov.temperatures.scales;
 
-import sukhov.temperatures.ScalesBox;
+import sukhov.temperatures.ScalesName;
 
 public class ReaumerScale implements Scale {
     private double degrees;
-    private ScalesBox scalesBox = ScalesBox.REAUMUR;
+    private ScalesName scalesName = ScalesName.REAUMUR;
 
     public ReaumerScale() {
     }
@@ -19,22 +19,14 @@ public class ReaumerScale implements Scale {
     }
 
     @Override
-    public ScalesBox getScalesBox() {
-        return scalesBox;
+    public ScalesName getScalesName() {
+        return scalesName;
     }
 
     @Override
-    public double calculation(Scale scale) {
-        if (scale.getScalesBox() == scalesBox) {
-            return degrees;
-        } else if (scale.getScalesBox() == ScalesBox.CELSIUS) {
-            return degrees * 9 / 4 + 32;
-        } else if (scale.getScalesBox() == ScalesBox.FAHRENHEIT) {
-            return degrees * 5 / 9 - 459.67;
-        } else if (scale.getScalesBox() == ScalesBox.KELVIN) {
-            return degrees * 5 / 4 + 273.15;
-        }
+    public double getCalculation(Scale scale) {
+        CalculatorScale calculation = new CalculatorScale(degrees, scalesName, scale);
 
-        return 0;
+        return calculation.getCalculation();
     }
 }
