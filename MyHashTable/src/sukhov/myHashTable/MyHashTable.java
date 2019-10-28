@@ -61,13 +61,24 @@ public class MyHashTable<T> implements Collection<T> {
                 throw new ConcurrentModificationException("Были изменения");
             }
 
-            if (isChange && hasNext()) {
-                next();
+            if (isChange) {
+                if (hasNext()) {
+                    next();
+                }
+                throw new NoSuchElementException("Таблица пустая");
             }
 
-            MyHashTable.this.remove(data);
-            modCountIterator = modCount;
+            if (linkIndex <= 0) {
+                arrayIndex--;
+                linkIndex = table[arrayIndex].size() - 1;
+            } else {
+                linkIndex--;
+            }
+
+            table[arrayIndex].remove(linkIndex);
+
             isChange = true;
+            size--;
         }
     }
 
@@ -230,12 +241,10 @@ public class MyHashTable<T> implements Collection<T> {
     @SuppressWarnings("unchecked")
     @Override
     public T[] toArray(Object[] array) {
-        T[] arrayData;
+        T[] arrayData = (T[]) array;
 
-        if (array.length <= size) {
-            arrayData = (T[]) array;
-        } else {
-            arrayData = (T[]) new Object[array.length];
+        if (array.length > size) {
+            arrayData = (T[]) Arrays.copyOf(array, array.length);
         }
 
         int i = 0;
